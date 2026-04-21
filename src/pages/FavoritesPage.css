@@ -1,0 +1,119 @@
+.favorites-page {
+  padding-top: 100px;
+  background-color: white;
+  min-height: 100vh;
+}
+
+.favorites-header-mobile {
+  display: none;
+}
+
+/* Mobile Header Refinement */
+@media (max-width: 768px) {
+  .favorites-page {
+    padding-top: 0;
+  }
+
+  .favorites-header-mobile {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .favorites-header-mobile h1 {
+    font-size: 1.2rem; /* Increased from 1.1rem */
+    font-weight: 700;
+  }
+
+  .back-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: var(--text-main);
+  }
+
+  .header-spacer {
+    width: 36px;
+  }
+
+  .favorites-content {
+    padding: 1rem;
+  }
+}
+
+/* Desktop Header Styling */
+.favorites-header-desktop {
+  margin-bottom: 3rem;
+}
+
+.favorites-header-desktop .title-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.favorites-header-desktop h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+}
+
+.favorites-header-desktop p {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+}
+
+/* Grid Layout */
+.favorites-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .favorites-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+}
+
+/* Empty State */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem;
+  text-align: center;
+}
+
+.empty-icon-wrap {
+  width: 100px;
+  height: 100px;
+  background: #fff5f5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.empty-state h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+  max-width: 300px;
+}

@@ -1,0 +1,193 @@
+@import url("https://db.onlinewebfonts.com/c/bd8143ad5315106a3d3fc9d17e6f80e9?family=Mayonice");
+
+:root {
+  /* Brand Colors */
+  --primary: #d92228; /* Realtor red */
+  --primary-hover: #b0191e;
+  --secondary: #18181A;
+  --background: #ffffff;
+  --surface: #ffffff;
+  
+  /* Text Colors */
+  --text-main: #18181A;
+  --text-muted: #6b6b70;
+  
+  /* UI Elements */
+  --border: #e0e0e5;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.15);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  
+  /* Gradients */
+  --hero-overlay: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.7));
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+body {
+  font-family: 'Galano Grotesque Alt', sans-serif;
+  color: var(--text-main);
+  background-color: var(--background);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none; /* Prevent bounce on mobile */
+}
+
+/* App-like Feel Resets */
+@media (max-width: 768px) {
+  html, body {
+    position: relative;
+    width: 100%;
+    /* Let body naturally handle all vertical scrolling */
+  }
+
+  .app-container {
+    width: 100%;
+  }
+
+  .main-content {
+    margin-top: 0; /* Let hero handle padding */
+  }
+
+  body.hide-nav-mobile .navbar {
+    display: none !important;
+  }
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Galano Grotesque Alt', sans-serif;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Utilities */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.hide-mobile {
+  display: block;
+}
+
+.hide-desktop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+  
+  .hide-desktop {
+    display: block !important;
+  }
+  
+  .app-container {
+    padding-bottom: 70px; /* Space for mobile bottom nav */
+  }
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.btn-outline {
+  background-color: transparent;
+  color: var(--text-main);
+  border: 1px solid var(--border);
+}
+
+.btn-outline:hover {
+  border-color: var(--text-main);
+  background-color: rgba(0,0,0,0.03);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.badge-verified {
+  background-color: transparent;
+  color: #1da1f2;
+  padding: 0;
+  gap: 0.35rem;
+  font-weight: 700;
+}
+
+.badge-room {
+  background-color: #fce8e8;
+  color: var(--primary);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease forwards;
+}

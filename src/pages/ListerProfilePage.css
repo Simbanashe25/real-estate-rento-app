@@ -1,0 +1,171 @@
+.lister-profile-page {
+  padding-top: 100px;
+  background-color: white; /* Clean white background */
+  min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .lister-profile-page {
+    padding-top: 0; /* Removed for hidden nav */
+  }
+}
+
+.profile-header-minimal {
+  background: white;
+  padding: 1.25rem 0; /* Further reduced */
+  border-bottom: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 0;
+}
+
+@media (min-width: 992px) {
+  .profile-header-minimal {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.profile-hero {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.profile-avatar-simple {
+  position: relative;
+}
+
+.profile-avatar-simple img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #eee; /* Thin border */
+  box-shadow: none; /* No shadow */
+}
+
+.name-line {
+  margin-bottom: 0.5rem;
+}
+
+.name-line h1 {
+  font-size: 2.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.quick-stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.q-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.05rem;
+  color: var(--text-muted);
+}
+
+.whatsapp-cta-large {
+  background-color: #25D366 !important;
+  border: none !important;
+  color: white !important;
+  padding: 12px 28px !important;
+  border-radius: var(--radius-full) !important;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  box-shadow: none !important; /* Flat design */
+}
+
+.profile-grid-clean {
+  display: flex;
+  flex-direction: column; /* Vertical flow */
+  padding: 1.5rem 0;
+}
+
+.clean-section {
+  padding-bottom: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #eee; /* Thin divider */
+}
+
+.clean-section:last-child {
+  border-bottom: none;
+}
+
+.bio-minimal {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--text-main);
+  max-width: 850px;
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.listings-minimal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 768px) {
+  .profile-header-minimal {
+    padding: 0.75rem 1rem 1.25rem; /* Tighter top padding */
+    gap: 0.75rem;
+    text-align: left;
+  }
+
+  .profile-hero {
+    flex-direction: row; /* Switch to row for compactness */
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .profile-avatar-simple img {
+    width: 90px; /* Reduced from 140px */
+    height: 90px;
+  }
+
+  .name-line h1 {
+    font-size: 1.75rem; /* Adjusted for row layout */
+    margin-bottom: 4px;
+  }
+
+  .quick-stats {
+    justify-content: flex-start; /* Aligned left */
+    gap: 1rem;
+    font-size: 1.1rem; /* Increased for legibility */
+  }
+
+  .profile-actions-minimal {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .whatsapp-cta-large {
+    width: 100%;
+    justify-content: center;
+    padding: 1rem; /* Increased for better touch target */
+    font-size: 1.1rem;
+  }
+
+  .listings-minimal-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    padding: 0 1rem 2rem; /* Consistent padding */
+  }
+}
+}
+
+

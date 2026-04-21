@@ -1,0 +1,78 @@
+.featured-listings {
+  padding: 4rem 0 2rem;
+  background-color: #ffffff;
+  overflow-x: hidden;
+}
+
+.category-carousel-section {
+  margin-bottom: 3rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1e293b;
+  letter-spacing: -0.025em;
+}
+
+.view-all {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.2s;
+}
+
+.view-all:hover {
+  color: #1d4ed8;
+}
+
+/* Global horizontal scroll for category carousels */
+.listings-grid {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.5rem;
+  padding: 0.5rem 1.5rem 1.5rem;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: 1.5rem;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.listings-grid::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.listings-grid > * {
+  flex: 0 0 240px;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 768px) {
+  .featured-listings {
+    padding: 1.5rem 0 0.5rem;
+  }
+
+  .category-carousel-section {
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.7rem;
+  }
+
+  .listings-grid {
+    gap: 1.25rem;
+  }
+
+  .listings-grid > * {
+    flex: 0 0 200px; /* User requested 200px size */
+  }
+}
