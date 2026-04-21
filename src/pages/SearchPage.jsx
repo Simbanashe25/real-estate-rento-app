@@ -244,12 +244,8 @@ const SearchPage = () => {
               style={{ height: "100%", width: "100%", zIndex: 1 }}
             >
               <TileLayer
-                url={import.meta.env.VITE_MAPBOX_TOKEN && import.meta.env.VITE_MAPBOX_TOKEN !== 'your_mapbox_access_token_here'
-                  ? `https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`
-                  : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
-                attribution={import.meta.env.VITE_MAPBOX_TOKEN && import.meta.env.VITE_MAPBOX_TOKEN !== 'your_mapbox_access_token_here'
-                  ? '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                  : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}
+                url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`}
+                attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
               />
               {results.filter(p => p.lat && p.lng).map(property => (
                 <Marker key={property.id} position={[property.lat, property.lng]}>

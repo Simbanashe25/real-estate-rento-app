@@ -7,6 +7,7 @@ import { formatWhatsAppNumber } from '../utils/phoneUtils';
 import SEO from '../components/SEO';
 import PropertyCard from '../components/PropertyCard';
 import SkeletonCard from '../components/SkeletonCard';
+import { getPropertyDisplayTitle } from '../utils/propertyUtils';
 import 'leaflet/dist/leaflet.css';
 import './PropertyDetails.css';
 
@@ -96,13 +97,14 @@ const PropertyDetails = () => {
         if (data.lat && data.lng) {
           setMapPosition([data.lat, data.lng]);
         } else {
-          // Geocode using free OpenStreetMap Nominatim API
+          // Geocode using Mapbox Geocoding API
           const addressQuery = data.city ? `${data.address}, ${data.city}` : data.address;
-          fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressQuery)}`)
+          fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(addressQuery)}.json?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`)
             .then(res => res.json())
             .then(geoData => {
-              if (geoData && geoData.length > 0) {
-                setMapPosition([parseFloat(geoData[0].lat), parseFloat(geoData[0].lon)]);
+              if (geoData && geoData.features && geoData.features.length > 0) {
+                const [lon, lat] = geoData.features[0].center;
+                setMapPosition([lat, lon]);
               } else {
                 setMapPosition([-17.8248, 31.0530]); // Harare Fallback
               }
@@ -211,8 +213,10 @@ const PropertyDetails = () => {
     );
   }
 
-  const baseTitle = property.title || `${property.type || 'Home'} in ${property.city || property.address || 'Zimbabwe'}`;
-  const desktopTitle = baseTitle + (property.price ? ` - $${property.price}/mo` : '');
+  const displayTitle = getPropertyDisplayTitle(property);
+  const locationName = property.suburb || property.city || 'Zimbabwe';
+  const baseTitle = `${displayTitle} in ${locationName}`;
+  const seoTitle = baseTitle + (property.price ? ` - $${property.price.toLocaleString()}/mo` : '');
   const displayAddress = 
     property.suburb && property.city 
       ? `${property.suburb}, ${property.city}` 
@@ -267,7 +271,7 @@ const PropertyDetails = () => {
   return (
     <div className="property-details-page">
       <SEO 
-        title={desktopTitle}
+        title={seoTitle}
         description={`Rent this ${property.category || 'property'} in ${property.city || property.address || 'Zimbabwe'}. ${property.description?.substring(0, 150) || ''}...`}
         ogImage={displayImages[0]}
       />
@@ -329,7 +333,7 @@ const PropertyDetails = () => {
       <div className="container main-content-wrapper">
         <div className="property-header-row hide-mobile">
           <div className="title-block">
-            <h1 className="title">{desktopTitle}</h1>
+            <h1 className="title">{displayTitle} in <strong>{locationName}</strong></h1>
           </div>
           <div className="action-block">
             <button className="btn-text" onClick={() => {
@@ -343,7 +347,7 @@ const PropertyDetails = () => {
         </div>
 
         <div className="mobile-title-section show-mobile">
-          <h1 className="mobile-title">{baseTitle}</h1>
+          <h1 className="mobile-title">{displayTitle} in <strong>{locationName}</strong></h1>
         </div>
 
         <div className="property-subheader">
@@ -410,12 +414,8 @@ const PropertyDetails = () => {
                   <div className="map-inner">
                     <MapContainer center={mapPosition} zoom={14} scrollWheelZoom={false} style={{ height: "100%", width: "100%", borderRadius: "12px", zIndex: 1 }}>
                       <TileLayer
-                        url={import.meta.env.VITE_MAPBOX_TOKEN && import.meta.env.VITE_MAPBOX_TOKEN !== 'your_mapbox_access_token_here'
-                          ? `https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`
-                          : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
-                        attribution={import.meta.env.VITE_MAPBOX_TOKEN && import.meta.env.VITE_MAPBOX_TOKEN !== 'your_mapbox_access_token_here'
-                          ? '&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                          : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}
+                        url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`}
+                        attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                       />
                       <Marker position={mapPosition}>
                         <Popup>{displayAddress}</Popup>

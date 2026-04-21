@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, BedDouble, Bath, Square, MapPin, BadgeCheck } from 'lucide-react';
 import { supabase } from '../supabase/config';
+import { getPropertyDisplayTitle } from '../utils/propertyUtils';
 import './PropertyCard.css';
 
 const PropertyCard = ({ property }) => {
   const navigate = useNavigate();
   const { id, type, image, price, beds, baths, sqft, address, verified, available_from, suburb, city } = property;
 
+  const displayTitle = getPropertyDisplayTitle(property);
   const locationLabel = suburb && city ? `${suburb}, ${city}` : suburb || city || address?.split(',')[0] || '';
 
   const getAvailabilityLabel = () => {
@@ -104,7 +106,9 @@ const PropertyCard = ({ property }) => {
             {locationLabel}
           </p>
         )}
-        <h3 className="property-title-main">{property.title || 'Beautiful Rental'}</h3>
+        <h3 className="property-title-main">
+          {displayTitle} in <strong>{suburb || city || 'Zimbabwe'}</strong>
+        </h3>
         
         <div className="property-header">
           <div className="property-stats-mini">

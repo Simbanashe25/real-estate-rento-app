@@ -120,13 +120,20 @@
 }
 
 .property-title-main {
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 500;
   color: #111;
   margin: 0 0 0.35rem 0;
-  white-space: nowrap;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.property-title-main strong {
+  font-weight: 700;
+  color: #000;
 }
 
 .property-header {
@@ -226,13 +233,14 @@
   }
 
   .property-title-main {
-    font-size: 0.95rem; /* Increased from 0.8rem */
-    margin-bottom: 0.15rem;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
     display: -webkit-box;
-    -webkit-line-clamp: 1;
+    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     white-space: normal;
+    line-height: 1.3;
   }
 
   .card-location-text {

@@ -91,10 +91,15 @@ const UserProfile = () => {
   const handleAvatarChange = async (e) => {
     const file = e.target.files?.[0];
     if (!file || !sessionUser) return;
+    
+    // Create a local preview immediately for "fast" update feel
+    const localPreviewUrl = URL.createObjectURL(file);
+    setAvatarUrl(localPreviewUrl);
     setAvatarUploading(true);
+
     try {
       const ext = file.name.split('.').pop();
-      // Using a timestamp to avoid potential upsert permission issues
+      // Using a timestamp to avoid potential upsert permission issues and browser caching
       const filePath = `avatars/${sessionUser.id}_${Date.now()}.${ext}`;
 
       const { data, error: uploadErr } = await supabase.storage
@@ -124,10 +129,22 @@ const UserProfile = () => {
       // Update auth metadata
       await supabase.auth.updateUser({ data: { avatar_url: publicUrl } });
 
+      // Update all properties belonging to this user so the change reflects everywhere "fast"
+      const { error: propUpdateErr } = await supabase
+        .from('properties')
+        .update({ manager_avatar: publicUrl })
+        .eq('manager_id', sessionUser.id);
+      
+      if (propUpdateErr) console.warn('Properties avatar update error (non-critical):', propUpdateErr);
+
       setAvatarUrl(publicUrl);
     } catch (err) {
       console.error('Avatar upload error:', err);
       alert(`Upload failed: ${err.message || 'Unknown error'}. Make sure the "property-images" bucket exists in Supabase and has public upload policies.`);
+      // Revert to old avatar if upload fails
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setAvatarUrl(session?.user?.user_metadata?.avatar_url || null);
+      });
     } finally {
       setAvatarUploading(false);
     }
