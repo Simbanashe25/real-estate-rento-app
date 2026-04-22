@@ -92,9 +92,9 @@ const PropertyDetails = () => {
         if (data.lat && data.lng) {
           setMapPosition([data.lat, data.lng]);
         } else {
-          // Geocode using Mapbox Geocoding API
-          const addressQuery = data.city ? `${data.address}, ${data.city}` : data.address;
-          fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(addressQuery)}.json?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`)
+          // Geocode using Mapbox Geocoding API - ensure Zimbabwe context
+          const addressQuery = `${data.address || data.suburb}, ${data.city}, Zimbabwe`;
+          fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(addressQuery)}.json?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}&limit=1`)
             .then(res => res.json())
             .then(geoData => {
               if (geoData && geoData.features && geoData.features.length > 0) {
@@ -414,7 +414,14 @@ const PropertyDetails = () => {
               <div className="map-container">
                 {mapPosition ? (
                   <div className="map-inner">
-                    <MapContainer center={mapPosition} zoom={14} scrollWheelZoom={false} style={{ height: "100%", width: "100%", borderRadius: "12px", zIndex: 1 }} attributionControl={false}>
+                    <MapContainer 
+                      key={`${mapPosition[0]}-${mapPosition[1]}`}
+                      center={mapPosition} 
+                      zoom={16} 
+                      scrollWheelZoom={false} 
+                      style={{ height: "100%", width: "100%", borderRadius: "12px", zIndex: 1 }} 
+                      attributionControl={false}
+                    >
                       <TileLayer
                         url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`}
                         attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>'
@@ -442,7 +449,17 @@ const PropertyDetails = () => {
             <div className="contact-card">
               <h3>Contact Manager</h3>
               <div className="manager-info">
-                <img src={property.manager_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(property.manager_name || 'Admin')}&background=random`} alt="Manager" className="manager-avatar" loading="lazy" />
+                <div className={`manager-avatar-wrapper ${loading ? 'skeleton' : ''}`}>
+                  {!loading && (
+                    <img 
+                      src={property.manager_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(property.manager_name || 'Admin')}&background=random`} 
+                      alt="Manager" 
+                      className="manager-avatar" 
+                      loading="lazy" 
+                      onLoad={(e) => e.target.classList.add('loaded')}
+                    />
+                  )}
+                </div>
                 <div>
                   <Link to={`/lister/${encodeURIComponent(property.manager_name || 'Rentor Admin')}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <strong>{property.manager_name || 'Rentor Admin'}</strong>

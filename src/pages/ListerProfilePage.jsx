@@ -110,9 +110,16 @@ const ListerProfilePage = () => {
       />
       <div className="container">
         <div className="profile-header-minimal">
-          <div className="profile-hero">
-            <div className="profile-avatar-simple">
-              <img src={lister.avatar} alt={lister.name} loading="lazy" />
+    <div className="profile-hero">
+            <div className={`profile-avatar-simple ${isLoading ? 'skeleton' : ''}`}>
+              {!isLoading && (
+                <img 
+                  src={lister.avatar} 
+                  alt={lister.name} 
+                  loading="lazy" 
+                  onLoad={(e) => e.target.classList.add('loaded')}
+                />
+              )}
             </div>
             <div className="profile-intro">
               <div className="name-line">

@@ -109,8 +109,10 @@ const SearchPage = () => {
     const filtered = allResults.filter(p => {
       const matchLocation = !term || 
         (p.address || '').toLowerCase().includes(term) ||
+        (p.suburb || '').toLowerCase().includes(term) ||
         (p.city || '').toLowerCase().includes(term) ||
-        (p.province || '').toLowerCase().includes(term);
+        (p.province || '').toLowerCase().includes(term) ||
+        (p.title || '').toLowerCase().includes(term);
       
       const matchCategory = categoryTarget === 'All Types' || (() => {
         const type = p.type;
