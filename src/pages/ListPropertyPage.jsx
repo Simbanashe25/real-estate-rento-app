@@ -210,10 +210,28 @@ const ListPropertyPage = () => {
     }
 
     try {
+      setIsFinalizing(true);
+      
+      // Geocode the location to get coordinates for the map
+      let lat = null;
+      let lng = null;
+      try {
+        const query = encodeURIComponent(`${formData.suburb}, ${formData.city}, Zimbabwe`);
+        const geoRes = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}&limit=1`);
+        const geoData = await geoRes.json();
+        if (geoData.features && geoData.features.length > 0) {
+          [lng, lat] = geoData.features[0].center;
+        }
+      } catch (geoErr) {
+        console.warn("Geocoding failed, falling back to null coordinates:", geoErr);
+      }
+
       const generatedTitle = `${formData.type} in ${formData.suburb}`;
       const newListing = {
         ...formData,
         title: generatedTitle,
+        lat,
+        lng,
         address: `${formData.suburb}, ${formData.city}`, // Use location as address fallback
         province: CITY_TO_PROVINCE[formData.city] || 'Zimbabwe', // Auto-fill province to satisfy DB constraint
         price: Number(formData.price),

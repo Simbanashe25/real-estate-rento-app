@@ -27,6 +27,16 @@ const CATEGORY_MAP = {
   'all': 'All Types'
 };
 
+const CITY_COORDINATES = {
+  'Harare': [-17.8248, 31.0530],
+  'Bulawayo': [-20.1465, 28.5703],
+  'Mutare': [-18.9727, 32.6695],
+  'Gweru': [-19.4606, 29.8149],
+  'Masvingo': [-20.0637, 30.8277],
+  'Kwekwe': [-18.9163, 29.8053],
+  'Chinhoyi': [-17.3592, 30.2039]
+};
+
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryParam = searchParams.get('q') || '';
@@ -307,17 +317,26 @@ const SearchPage = () => {
                 url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`}
                 attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>'
               />
-              {results.filter(p => p.lat && p.lng).map(property => (
-                <Marker key={property.id} position={[property.lat, property.lng]}>
-                  <Popup>
-                    <div className="map-popup">
-                      <img src={property.image} alt="prop" style={{width: '100%', height: '80px', objectFit: 'cover', borderRadius: '4px'}}/>
-                      <strong>${property.price}/mo</strong>
-                      <p>{property.beds}bds | {property.baths}ba</p>
-                    </div>
-                  </Popup>
-                </Marker>
-              ))}
+              {results.map(property => {
+                const lat = property.lat || CITY_COORDINATES[property.city]?.[0] || -17.8248;
+                const lng = property.lng || CITY_COORDINATES[property.city]?.[1] || 31.0530;
+                
+                // Add a tiny random jitter so markers don't overlap perfectly if coordinates are missing
+                const jitterLat = property.lat ? 0 : (Math.random() - 0.5) * 0.05;
+                const jitterLng = property.lng ? 0 : (Math.random() - 0.5) * 0.05;
+
+                return (
+                  <Marker key={property.id} position={[lat + jitterLat, lng + jitterLng]}>
+                    <Popup>
+                      <div className="map-popup">
+                        <img src={property.image} alt="prop" style={{width: '100%', height: '80px', objectFit: 'cover', borderRadius: '4px'}}/>
+                        <strong>${property.price}/mo</strong>
+                        <p>{property.beds}bds | {property.baths}ba</p>
+                      </div>
+                    </Popup>
+                  </Marker>
+                );
+              })}
             </MapContainer>
           </div>
         )}
