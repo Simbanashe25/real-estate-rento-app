@@ -305,7 +305,7 @@
 
 @media (max-width: 768px) {
   .profile-listings-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 0.5rem;
   }
 }

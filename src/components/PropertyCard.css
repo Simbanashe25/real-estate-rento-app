@@ -25,15 +25,66 @@
   background-color: #f0f0f0;
 }
 
-.property-image {
+.property-image-carousel {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden; /* Disable scrolling by default (desktop) */
+}
+
+@media (max-width: 768px) {
+  .property-image-carousel {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+}
+
+.property-image-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.property-carousel-image {
+  flex: 0 0 100%;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  scroll-snap-align: start;
   transition: transform 0.5s ease;
 }
 
-.property-card:hover .property-image {
+.property-card:hover .property-carousel-image {
   transform: scale(1.05);
+}
+
+.carousel-dots {
+  display: none; /* Hide by default (desktop) */
+}
+
+@media (max-width: 768px) {
+  .carousel-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 10;
+  }
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background: white;
+  transform: scale(1.3);
 }
 
 .card-occupied-overlay {
@@ -136,6 +187,21 @@
   color: #000;
 }
 
+.property-card-compact .property-title-main {
+  font-size: 0.9rem;
+}
+
+.property-description {
+  font-size: 0.88rem;
+  color: #666;
+  margin: 0.2rem 0 0.6rem 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.5;
+}
+
 .property-header {
   display: flex;
   justify-content: space-between;
@@ -188,14 +254,7 @@
   font-weight: 400;
 }
 
-.card-location-text {
-  font-size: 0.75rem;
-  color: #999;
-  font-weight: 400;
-  margin: 0 0 0.2rem 0;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
+
 
 .availability-text {
   font-size: 0.8rem;
@@ -243,10 +302,7 @@
     line-height: 1.3;
   }
 
-  .card-location-text {
-    font-size: 0.75rem; /* Increased from 0.6rem */
-    margin-bottom: 0.1rem;
-  }
+
 
   .property-stats-mini {
     gap: 0.5rem; /* Increased from 0.35rem */

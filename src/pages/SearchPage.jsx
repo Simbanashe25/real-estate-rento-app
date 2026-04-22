@@ -1,31 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import PropertyCard from '../components/PropertyCard';
-import SkeletonCard from '../components/SkeletonCard';
-import { SlidersHorizontal, Map as MapIcon, List, Search as SearchIcon } from 'lucide-react';
-import { supabase } from '../supabase/config';
-import SEO from '../components/SEO';
 import 'leaflet/dist/leaflet.css';
-import './SearchPage.css';
-
-// Fix for default Leaflet icon issue
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
-});
+import { Search, SlidersHorizontal, Map as MapIcon, List, X, ChevronDown, BedDouble, Bath, Square } from 'lucide-react';
+import PropertyCard from '../components/PropertyCard';
+import SkeletonCard from '../components/SkeletonCard';
+import { supabase } from '../supabase/config';
+import SEO from '../components/SEO';
+import './SearchPage.css';
+
+const DefaultIcon = L.icon({ iconUrl: icon, shadowUrl: iconShadow, iconSize: [25, 41], iconAnchor: [12, 41] });
 L.Marker.prototype.options.icon = DefaultIcon;
 
+
 const CATEGORY_MAP = {
-  'homes': 'Entire Home',
+  'residential': 'Residential',
+  'homes': 'Residential',
   'rooms': 'Private Room',
-  'shared': 'Shared Room',
-  'student': 'Student Housing',
+  'commercial': 'Commercial',
+  'industrial': 'Industrial',
+  'land': 'Land',
+  'agricultural': 'Agricultural',
   'all': 'All Types'
 };
 
@@ -82,7 +80,15 @@ const SearchPage = () => {
   // Sync state with URL params when they change (e.g. user searches again from Home)
   useEffect(() => {
     setLocationStr(queryParam);
-    setActiveCategory(categoryParam);
+    
+    // Map URL aliases to dropdown values
+    if (categoryParam === 'homes') {
+      setActiveCategory('residential');
+    } else if (categoryParam === 'rooms') {
+      setActiveCategory('Private Room');
+    } else {
+      setActiveCategory(categoryParam);
+    }
   }, [queryParam, categoryParam]);
 
   // Combined filtering
@@ -96,7 +102,20 @@ const SearchPage = () => {
         (p.city || '').toLowerCase().includes(term) ||
         (p.province || '').toLowerCase().includes(term);
       
-      const matchCategory = categoryTarget === 'All Types' || p.type === categoryTarget;
+      const matchCategory = categoryTarget === 'All Types' || (() => {
+        const type = p.type;
+        if (categoryTarget === 'Residential') 
+          return ['House', 'Townhouse', 'Apartment', 'Cottage', 'Private Room', 'Shared Room', 'Student Housing'].includes(type);
+        if (categoryTarget === 'Commercial') 
+          return ['Office', 'Retail', 'Hotel'].includes(type);
+        if (categoryTarget === 'Industrial') 
+          return ['Warehouse', 'Workshop'].includes(type);
+        if (categoryTarget === 'Land') 
+          return ['Residential Stand', 'Commercial Stand'].includes(type);
+        if (categoryTarget === 'Agricultural') 
+          return ['Farm', 'Smallholding'].includes(type);
+        return type === categoryTarget;
+      })();
       
       let matchPrice = true;
       const price = Number(p.price);
@@ -130,10 +149,24 @@ const SearchPage = () => {
     setViewMode(prev => prev === 'list' ? 'map' : 'list');
   };
 
+  const getCategoryTitle = () => {
+    if (activeCategory === 'all') return 'Rentals';
+    if (activeCategory === 'homes' || activeCategory === 'residential') return 'Residential Properties';
+    if (activeCategory === 'rooms') return 'Private Rooms';
+
+    const mapped = CATEGORY_MAP[activeCategory];
+    if (mapped) return mapped.endsWith('s') ? mapped : mapped + 's';
+    
+    // For specific sub-categories like "House", "Apartment", just add 's' if needed
+    if (activeCategory.endsWith('s')) return activeCategory;
+    if (activeCategory === 'Property' || activeCategory === 'Student Housing') return activeCategory;
+    return activeCategory + 's';
+  };
+
   return (
     <div className={`search-page view-${viewMode}`}>
       <SEO 
-        title={`${activeCategory !== 'all' ? CATEGORY_MAP[activeCategory] + 's' : 'Rentals'}${locationStr ? ` in ${locationStr}` : ''}`} 
+        title={`${getCategoryTitle()}${locationStr ? ` in ${locationStr}` : ''}`} 
         description={`Browse ${results.length} available rentals in ${locationStr || 'Zimbabwe'}. Find homes, rooms and apartments.`}
       />
       <div className="search-filters-bar">
@@ -145,7 +178,7 @@ const SearchPage = () => {
             placeholder="Where to?"
             className="search-location-input"
           />
-          <button type="submit" className="search-btn-icon"><SearchIcon size={18} /></button>
+          <button type="submit" className="search-btn-icon"><Search size={18} /></button>
         </form>
 
         <div className="filters-group">
@@ -155,10 +188,36 @@ const SearchPage = () => {
             onChange={(e) => setActiveCategory(e.target.value)}
           >
             <option value="all">All Types</option>
-            <option value="homes">Entire Homes</option>
-            <option value="rooms">Private Rooms</option>
-            <option value="shared">Shared Rooms</option>
-            <option value="student">Student Housing</option>
+            <option value="residential">All Residential</option>
+            <optgroup label="Residential Types">
+              <option value="House">House / Villa</option>
+              <option value="Townhouse">Townhouse / Cluster</option>
+              <option value="Apartment">Apartment / Flat</option>
+              <option value="Cottage">Cottage / Backyard Unit</option>
+              <option value="Private Room">Private Room</option>
+              <option value="Student Housing">Student Housing</option>
+            </optgroup>
+            <option value="commercial">All Commercial</option>
+            <optgroup label="Commercial Types">
+              <option value="Office">Office Building</option>
+              <option value="Retail">Shop / Retail Space</option>
+              <option value="Hotel">Hotel / Lodge</option>
+            </optgroup>
+            <option value="industrial">All Industrial</option>
+            <optgroup label="Industrial Types">
+              <option value="Warehouse">Warehouse</option>
+              <option value="Workshop">Workshop</option>
+            </optgroup>
+            <option value="land">All Land / Stands</option>
+            <optgroup label="Land Types">
+              <option value="Residential Stand">Residential Stand</option>
+              <option value="Commercial Stand">Commercial Stand</option>
+            </optgroup>
+            <option value="agricultural">All Agricultural</option>
+            <optgroup label="Agricultural Types">
+              <option value="Farm">Farm / Agricultural Land</option>
+              <option value="Smallholding">Smallholding</option>
+            </optgroup>
           </select>
           <select 
             className="filter-select" 
@@ -242,10 +301,11 @@ const SearchPage = () => {
               zoom={12} 
               scrollWheelZoom={true} 
               style={{ height: "100%", width: "100%", zIndex: 1 }}
+              attributionControl={false}
             >
               <TileLayer
                 url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`}
-                attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>'
               />
               {results.filter(p => p.lat && p.lng).map(property => (
                 <Marker key={property.id} position={[property.lat, property.lng]}>

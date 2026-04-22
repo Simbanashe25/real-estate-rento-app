@@ -53,9 +53,9 @@ const FeaturedListings = () => {
         <div className="listings-grid">
           {loading 
             ? [1, 2, 3, 4, 5].map((i) => <SkeletonCard key={i} />)
-            : properties.map((property) => (
-                <PropertyCard key={property.id} property={property} />
-              ))
+              : properties.map((property) => (
+                  <PropertyCard key={property.id} property={property} disableSwipe={true} />
+                ))
           }
         </div>
       </div>

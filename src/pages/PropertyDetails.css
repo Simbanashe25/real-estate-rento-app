@@ -453,10 +453,11 @@
 section { margin-bottom: 3rem; }
 section h3 { font-size: 1.5rem; margin-bottom: 1.5rem; }
 
-.about-section p {
+.about-section p, .description-text {
   color: var(--text-muted);
   line-height: 1.8;
   font-size: 1.1rem;
+  white-space: pre-wrap; /* Preserve line breaks */
 }
 
 .features-list {
@@ -779,7 +780,7 @@ section h3 { font-size: 1.5rem; margin-bottom: 1.5rem; }
 
   /* Features grid */
   .features-list {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 0.5rem;
   }
 

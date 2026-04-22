@@ -1,27 +1,22 @@
 import { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { BedDouble, Bath, Square, MapPin } from 'lucide-react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import icon from 'leaflet/dist/images/marker-icon.png';
+import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import { BedDouble, Bath, Square, MapPin, Share } from 'lucide-react';
 import { supabase } from '../supabase/config';
 import { formatWhatsAppNumber } from '../utils/phoneUtils';
 import SEO from '../components/SEO';
 import PropertyCard from '../components/PropertyCard';
 import SkeletonCard from '../components/SkeletonCard';
 import { getPropertyDisplayTitle } from '../utils/propertyUtils';
-import 'leaflet/dist/leaflet.css';
 import './PropertyDetails.css';
 
-// Fix for default Leaflet icon issue
-import L from 'leaflet';
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [25, 41],
-    iconAnchor: [12, 41]
-});
+const DefaultIcon = L.icon({ iconUrl: icon, shadowUrl: iconShadow, iconSize: [25, 41], iconAnchor: [12, 41] });
 L.Marker.prototype.options.icon = DefaultIcon;
+
 
 const PropertyDetails = () => {
   const { id } = useParams();
@@ -286,10 +281,10 @@ const PropertyDetails = () => {
             navigator.clipboard.writeText(window.location.href);
             alert("Link copied to clipboard!");
           }}>
-            <i className="fa-solid fa-share-nodes"></i>
+            <Share size={18} />
           </button>
           <button className="mobile-action-btn" onClick={toggleSave}>
-            <i className={`fa-${isSaved ? 'solid' : 'regular'} fa-heart`} style={{ color: isSaved ? 'var(--primary)' : 'white' }}></i>
+            <i className={`fa-${isSaved ? 'solid' : 'regular'} fa-heart`} style={{ fontSize: '18px', color: isSaved ? 'var(--primary)' : 'inherit' }}></i>
           </button>
         </div>
       </div>
@@ -339,9 +334,9 @@ const PropertyDetails = () => {
             <button className="btn-text" onClick={() => {
               navigator.clipboard.writeText(window.location.href);
               alert("Link copied to clipboard!");
-            }}><i className="fa-solid fa-share-nodes"></i> Share</button>
+            }}><Share size={18} style={{ marginRight: '6px' }} /> Share</button>
             <button className="btn-text" onClick={toggleSave}>
-              <i className={`fa-${isSaved ? 'solid' : 'regular'} fa-heart`} style={{ color: isSaved ? 'var(--primary)' : 'inherit' }}></i> {isSaved ? 'Saved' : 'Save'}
+              <i className={`fa-${isSaved ? 'solid' : 'regular'} fa-heart`} style={{ color: isSaved ? 'var(--primary)' : 'inherit', marginRight: '6px' }}></i> {isSaved ? 'Saved' : 'Save'}
             </button>
           </div>
         </div>
@@ -398,12 +393,39 @@ const PropertyDetails = () => {
             </div>
 
 
+            <section className="about-section">
+              <h3>About this property</h3>
+              <div className="description-text">
+                {property.description}
+              </div>
+            </section>
+
             <section className="features-section">
               <h3>Features & Amenities</h3>
               <ul className="features-list">
-                {(property.features || property.amenities || []).map((feature, i) => (
-                  <li key={i}>{feature}</li>
-                ))}
+                {(property.features || property.amenities || []).map((feature, i) => {
+                  const iconClass = {
+                    'Borehole 💧': 'fa-solid fa-faucet-drip',
+                    'Water tank': 'fa-solid fa-droplet',
+                    'Swimming pool': 'fa-solid fa-person-swimming',
+                    'Backup Power (Solar/Inverter)': 'fa-solid fa-bolt',
+                    'WiFi / Fibre': 'fa-solid fa-wifi',
+                    'Air conditioning': 'fa-solid fa-wind',
+                    'Electric Fence': 'fa-solid fa-bolt-lightning',
+                    'Garden / Yard': 'fa-solid fa-leaf',
+                    '24/7 Security Guard': 'fa-solid fa-user-shield',
+                    'Solar Geyser': 'fa-solid fa-sun',
+                    'Carport / Garage': 'fa-solid fa-car',
+                    'Paved driveway': 'fa-solid fa-road'
+                  }[feature];
+
+                  return (
+                    <li key={i}>
+                      {iconClass && <i className={iconClass} style={{ marginRight: '10px', color: 'var(--primary)', width: '20px', textAlign: 'center' }}></i>}
+                      {feature}
+                    </li>
+                  );
+                })}
               </ul>
             </section>
 
@@ -412,13 +434,18 @@ const PropertyDetails = () => {
               <div className="map-container">
                 {mapPosition ? (
                   <div className="map-inner">
-                    <MapContainer center={mapPosition} zoom={14} scrollWheelZoom={false} style={{ height: "100%", width: "100%", borderRadius: "12px", zIndex: 1 }}>
+                    <MapContainer center={mapPosition} zoom={14} scrollWheelZoom={false} style={{ height: "100%", width: "100%", borderRadius: "12px", zIndex: 1 }} attributionControl={false}>
                       <TileLayer
                         url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`}
-                        attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a> &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                        attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>'
                       />
                       <Marker position={mapPosition}>
-                        <Popup>{displayAddress}</Popup>
+                        <Popup>
+                          <div style={{ padding: '5px' }}>
+                            <strong style={{ display: 'block', marginBottom: '4px' }}>{property.title}</strong>
+                            <span style={{ fontSize: '0.85rem', color: '#666' }}>{property.address}</span>
+                          </div>
+                        </Popup>
                       </Marker>
                     </MapContainer>
                   </div>
@@ -479,7 +506,7 @@ const PropertyDetails = () => {
                   ) : (
                     similarProperties.map(prop => (
                       <div key={prop.id} className="similar-card-item">
-                        <PropertyCard property={prop} />
+                        <PropertyCard property={prop} disableSwipe={true} />
                       </div>
                     ))
                   )}

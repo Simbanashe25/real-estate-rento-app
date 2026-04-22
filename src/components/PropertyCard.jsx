@@ -5,9 +5,10 @@ import { supabase } from '../supabase/config';
 import { getPropertyDisplayTitle } from '../utils/propertyUtils';
 import './PropertyCard.css';
 
-const PropertyCard = ({ property }) => {
+const PropertyCard = ({ property, onToggleFavorite, disableSwipe = false }) => {
   const navigate = useNavigate();
-  const { id, type, image, price, beds, baths, sqft, address, verified, available_from, suburb, city } = property;
+  const { id, type, image, all_images, description, price, beds, baths, sqft, address, verified, available_from, suburb, city } = property;
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const displayTitle = getPropertyDisplayTitle(property);
   const locationLabel = suburb && city ? `${suburb}, ${city}` : suburb || city || address?.split(',')[0] || '';
@@ -71,17 +72,54 @@ const PropertyCard = ({ property }) => {
     }
   };
 
+  const handleScroll = (e) => {
+    const scrollLeft = e.target.scrollLeft;
+    const width = e.target.offsetWidth;
+    const index = Math.round(scrollLeft / width);
+    setActiveImageIndex(index);
+  };
+
+  const images = all_images && all_images.length > 0 ? all_images : [image];
+
   return (
-    <div className={`property-card ${property.status === 'occupied' ? 'property-card-occupied' : ''}`} onClick={() => navigate(`/property/${id || 1}`)}>
+    <div className={`property-card ${property.status === 'occupied' ? 'property-card-occupied' : ''} ${disableSwipe ? 'property-card-compact' : ''}`} onClick={() => navigate(`/property/${id || 1}`)}>
       <div className="property-image-container">
         {property.status === 'occupied' && (
           <div className="card-occupied-overlay">Occupied</div>
         )}
-        <img 
-          src={image || "https://placehold.co/600x400/f3f4f6/666666?text=No+Photo"} 
-          alt={address} 
-          className="property-image" 
-        />
+        
+        {!disableSwipe ? (
+          <>
+            <div className="property-image-carousel" onScroll={handleScroll}>
+              {images.map((img, index) => (
+                <img 
+                  key={index}
+                  src={img || "https://placehold.co/600x400/f3f4f6/666666?text=No+Photo"} 
+                  alt={`${address} - ${index + 1}`} 
+                  className="property-carousel-image" 
+                />
+              ))}
+            </div>
+
+            {images.length > 1 && (
+              <div className="carousel-dots">
+                {images.map((_, index) => (
+                  <div 
+                    key={index} 
+                    className={`dot ${index === activeImageIndex ? 'active' : ''}`}
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        ) : (
+          <img 
+            src={image || "https://placehold.co/600x400/f3f4f6/666666?text=No+Photo"} 
+            alt={address} 
+            className="property-carousel-image" 
+          />
+        )}
+
         <div className="property-tags">
           <span className={`badge ${type?.toLowerCase().includes('room') ? 'badge-room' : 'badge-home'}`}>
             {type}
@@ -101,14 +139,16 @@ const PropertyCard = ({ property }) => {
       </div>
 
       <div className="property-details">
-        {locationLabel && (
-          <p className="card-location-text">
-            {locationLabel}
-          </p>
-        )}
+
         <h3 className="property-title-main">
           {displayTitle} in <strong>{suburb || city || 'Zimbabwe'}</strong>
         </h3>
+        
+        {!disableSwipe && description && (
+          <p className="property-description">
+            {description}
+          </p>
+        )}
         
         <div className="property-header">
           <div className="property-stats-mini">

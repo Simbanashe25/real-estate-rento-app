@@ -15,9 +15,39 @@ const ListPropertyPage = () => {
   const [uploadProgress, setUploadProgress] = useState({}); // { fileId: working/done }
   const [selectedAmenities, setSelectedAmenities] = useState([]);
   const ZIM_LOCATIONS = {
-    'Harare': ['Avondale', 'Belvedere', 'Borrowdale', 'Eastlea', 'Glen Lorne', 'Greendale', 'Mabelreign', 'Marlborough', 'Milton Park', 'Mount Pleasant', 'Westgate'],
-    'Bulawayo': ['Ascot', 'Burnside', 'Hillside', 'Khumalo', 'Lakeside', 'Malindela', 'Matsheumhlope', 'Morningside', 'North End', 'Riverside', 'Suburbs'],
-    'Mutare': ['Chikanga', 'Dangamvura', 'Fairbridge Park', 'Morningside', 'Murambi', 'Palmerston', 'Sakubva'],
+    'Harare': [
+      'Adelaide Park', 'Alexandra Park', 'Amby', 'Arcadia', 'Ardbennie', 'Ashdown Park', 'Aspindale', 'Aspindale Park', 
+      'Athlone', 'Avenues', 'Avondale', 'Avonhurst', 'Avonlea', 'Ballantyne Park', 'Belvedere', 'Bloomingdale', 
+      'Bluffhill', 'Borrowdale', 'Borrowdale Brooke', 'Borrowdale West', 'Braeside', 'Brookview', 'Budiriro', 
+      'Carrick Creagh', 'Chadcombe', 'Chisipite', 'Chishawasha Hills', 'City Centre', 'Cold Comfort', 
+      'Colne Valley', 'Cranborne', 'Crowborough', 'Crowhill', 'Dawnview', 'Derbyshire', 'Diamond Park', 
+      'Donnybrook', 'Eastlea', 'Emerald Hill', 'Epworth', 'Fairview', 'Fidelity Southview', 'Gletwyn', 
+      'Glen Lorne', 'Glen Norah', 'Glen View', 'Goodhope', 'Graniteside', 'Greendale', 'Groombridge', 
+      'Gunhill', 'Harare North', 'Harare South', 'Hatfield', 'Haydon Park', 'Helensvale', 'Highfield', 
+      'Highlands', 'Hillside', 'Hogerty Hill', 'Houghton Park', 'Kambanji', 'Kambuzuma', 'Kirkman Gardens', 
+      'Kuwadzana', 'Lochinvar', 'Logan Park', 'Mabelreign', 'Mabvuku', 'Madokero', 'Mainway Meadows', 
+      'Mandara', 'Manresa', 'Marimba Park', 'Marlborough', 'Meyrick Park', 'Milton Park', 'Monavale', 
+      'Mount Hampden', 'Mount Pleasant', 'Mount Pleasant Heights', 'Mbare', 'Msasa', 'Msasa Park', 
+      'Mufakose', 'Newlands', 'Northwood', 'Orange Grove', 'Parktown', 'Philadelphia', 'Pomona', 
+      'Prospect', 'Queensdale', 'Ridgeview', 'Rolf Valley', 'Ruwa', 'Rydale Ridge', 'Sandton', 
+      'Savannah Park', 'Shawasha Hills', 'Sherwood', 'Snake Park', 'Southerton', 'Southlea Park', 
+      'St Martins', 'Stoneridge', 'Strathaven', 'Sunningdale', 'Sunridge', 'Tafara', 'The Grange', 
+      'Tynwald', 'Vainona', 'Warren Park', 'Waterfalls', 'Westgate', 'Westwood', 'White Cliff', 
+      'Willowvale', 'Workington', 'Zimre Park'
+    ],
+    'Bulawayo': [
+      'Ascot', 'Barham Green', 'Belmont', 'Bradfield', 'Burnside', 'Cowdray Park', 'Douglasdale', 
+      'Emganwini', 'Entumbane', 'Famona', 'Four Winds', 'Gwabalanda', 'Hillside', 'Ilanda', 
+      'Kelvin', 'Khumalo', 'Lakeside', 'Lobengula', 'Magwegwe', 'Makokoba', 'Malindela', 
+      'Matsheumhlope', 'Montrose', 'Morningside', 'Newton West', 'Nketa', 'Nkulumane', 
+      'North End', 'Northvale', 'Paddonhurst', 'Parklands', 'Pumula', 'Queens Park', 
+      'Riverside', 'Romney Park', 'Selbourne Park', 'Sizinda', 'Southworld', 'Steeldale', 
+      'Suburbs', 'Thorngrove', 'Waterford', 'West Somerton', 'Woodlands'
+    ],
+    'Mutare': [
+      'Bordervale', 'Chikanga', 'Dangamvura', 'Darlington', 'Fairbridge Park', 'Greenside', 
+      'Morningside', 'Murambi', 'Palmerston', 'Sakubva', 'Yeovil'
+    ],
     'Gweru': ['Daylesford', 'Houghton Park', 'Lundi Park', 'Mkoba', 'Riverside', 'Senga'],
     'Masvingo': ['Target Kopje', 'Rhodene', 'Mucheke', 'Victoria Range'],
     'Kwekwe': ['Msasa Park', 'Newton', 'Rutendo', 'Redcliff'],
@@ -36,7 +66,7 @@ const ListPropertyPage = () => {
 
   const [formData, setFormData] = useState({
     title: '',
-    type: 'Entire Home',
+    type: 'House',
     price: '',
     city: 'Harare',
     suburb: 'Avondale',
@@ -83,13 +113,36 @@ const ListPropertyPage = () => {
     }
   };
 
-  const AMENITIES_LIST = [
-    'WiFi / Internet', '24/7 Security', 'Borehole', 'Solar Power',
-    'Backup Generator', 'Water Tank', 'Solar Geyser', 'Electric Fence',
-    'Gated Community', 'CCTV', 'Parking Space', 'Private Garden',
-    'Washer/Dryer', 'Dishwasher', 'Modern Kitchen', 'En-suite',
-    'AC / Heating', 'Pet Friendly', 'Gym Access', 'Pool'
-  ];
+  const GROUPED_AMENITIES = {
+    'Interior Features': [
+      'Built-in cupboards (BICs)', 'Fitted kitchen', 'Tiled floors', 'Ceiling finishes', 
+      'Main en-suite', 'Walk-in closet', 'Air conditioning', 'Modern Kitchen', 'Washer/Dryer'
+    ],
+    'Energy & Water': [
+      'Borehole 💧', 'Water tank', 'Backup Power (Solar/Inverter)', 'Backup Generator', 
+      'Solar Geyser', 'Electric Geyser', 'ZESA Connection', 'Municipal Water', 'Well'
+    ],
+    'Security': [
+      'Durawall & Gated', 'Electric Fence', 'Electric Gate', 'CCTV Cameras', 
+      'Alarm System', '24/7 Security Guard', 'Boom-gated Community', 'Complex Security'
+    ],
+    'Exterior & Leisure': [
+      'Garden / Yard', 'Swimming pool', 'Paved driveway', 'Carport / Garage', 
+      'Braai Area', 'Balcony', 'Private Garden', 'Pet Friendly'
+    ],
+    'Connectivity': [
+      'WiFi / Fibre', 'Internet Connectivity'
+    ],
+    'Specific to Apartments': [
+      'Elevator / Lift', 'Parking Space', 'Complex Security'
+    ],
+    'Specific to Commercial': [
+      'Office partitions', 'Reception area', 'Parking bays', 'Backup generator'
+    ],
+    'Specific to Lodges/Hotels': [
+      'Reception desk', 'Restaurant / Bar', 'Conference rooms', 'Laundry services', 'Room service'
+    ]
+  };
 
   const toggleAmenity = (amenity) => {
     setSelectedAmenities(prev => 
@@ -157,9 +210,11 @@ const ListPropertyPage = () => {
     }
 
     try {
+      const generatedTitle = `${formData.type} in ${formData.suburb}`;
       const newListing = {
         ...formData,
-        address: formData.title, // Use title as the address fallback for markers/etc
+        title: generatedTitle,
+        address: `${formData.suburb}, ${formData.city}`, // Use location as address fallback
         province: CITY_TO_PROVINCE[formData.city] || 'Zimbabwe', // Auto-fill province to satisfy DB constraint
         price: Number(formData.price),
         beds: Number(formData.beds),
@@ -223,25 +278,32 @@ const ListPropertyPage = () => {
         <form onSubmit={step === 2 ? handleSubmit : (e) => { e.preventDefault(); setStep(2); }}>
           {step === 1 && (
             <div className="form-section animate-fade-in">
-              <div className="form-group">
-                <label>Listing Title</label>
-                <input 
-                  name="title" 
-                  type="text" 
-                  value={formData.title} 
-                  onChange={handleInputChange} 
-                  placeholder="e.g. Modern 2-Bedroom Apartment in Avondale" 
-                  required 
-                />
-              </div>
+
               <div className="form-row">
                 <div className="form-group">
                   <label>Property Type</label>
                   <select name="type" value={formData.type} onChange={handleInputChange} required>
-                    <option value="Entire Home">Entire Home</option>
-                    <option value="Private Room">Private Room</option>
-                    <option value="Shared Room">Shared Room</option>
-                    <option value="Student Housing">Student Housing</option>
+                    <optgroup label="Residential">
+                      <option value="House">House / Villa</option>
+                      <option value="Townhouse">Townhouse / Cluster</option>
+                      <option value="Apartment">Apartment / Flat</option>
+                      <option value="Cottage">Cottage / Backyard Unit</option>
+                      <option value="Private Room">Private Room</option>
+                      <option value="Student Housing">Student Housing</option>
+                    </optgroup>
+                    <optgroup label="Commercial & Industrial">
+                      <option value="Office">Office Building</option>
+                      <option value="Retail">Shop / Retail Space</option>
+                      <option value="Hotel">Hotel / Lodge</option>
+                      <option value="Warehouse">Warehouse</option>
+                      <option value="Workshop">Workshop</option>
+                    </optgroup>
+                    <optgroup label="Land & Agriculture">
+                      <option value="Residential Stand">Residential Stand</option>
+                      <option value="Commercial Stand">Commercial Stand</option>
+                      <option value="Farm">Farm / Agricultural Land</option>
+                      <option value="Smallholding">Smallholding</option>
+                    </optgroup>
                   </select>
                 </div>
                 <div className="form-group">
@@ -357,18 +419,39 @@ const ListPropertyPage = () => {
               </div>
 
               <div className="form-group mt-4">
-                <label>Amenities</label>
-                <div className="amenities-pills">
-                  {AMENITIES_LIST.map((amenity) => (
-                    <button
-                      key={amenity}
-                      type="button"
-                      className={`amenity-pill ${selectedAmenities.includes(amenity) ? 'active' : ''}`}
-                      onClick={() => toggleAmenity(amenity)}
-                    >
-                      {amenity}
-                    </button>
-                  ))}
+                <label>Amenities & Features</label>
+                <div className="amenities-container">
+                  {Object.entries(GROUPED_AMENITIES).map(([category, items]) => {
+                    // Dynamic filtering for specific categories
+                    if (category.startsWith('Specific to ')) {
+                      const target = category.replace('Specific to ', '').toLowerCase();
+                      const type = formData.type.toLowerCase();
+                      const matches = 
+                        (target === 'apartments' && type.includes('apartment')) ||
+                        (target === 'commercial' && (['office', 'retail', 'warehouse', 'workshop', 'commercial'].some(t => type.includes(t)))) ||
+                        (target === 'lodges/hotels' && type.includes('hotel'));
+                      
+                      if (!matches) return null;
+                    }
+
+                    return (
+                      <div key={category} className="amenity-group">
+                        <h4 className="amenity-group-title">{category}</h4>
+                        <div className="amenities-pills">
+                          {items.map((amenity) => (
+                            <button
+                              key={amenity}
+                              type="button"
+                              className={`amenity-pill ${selectedAmenities.includes(amenity) ? 'active' : ''}`}
+                              onClick={() => toggleAmenity(amenity)}
+                            >
+                              {amenity}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 

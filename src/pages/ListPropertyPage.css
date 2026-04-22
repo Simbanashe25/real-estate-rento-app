@@ -152,11 +152,26 @@
   color: var(--text-muted);
 }
 
+.amenities-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.amenity-group-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.25rem;
+}
+
 .amenities-pills {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  margin-top: 0.5rem;
 }
 
 .amenity-pill {
