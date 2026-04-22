@@ -403,29 +403,9 @@ const PropertyDetails = () => {
             <section className="features-section">
               <h3>Features & Amenities</h3>
               <ul className="features-list">
-                {(property.features || property.amenities || []).map((feature, i) => {
-                  const iconClass = {
-                    'Borehole 💧': 'fa-solid fa-faucet-drip',
-                    'Water tank': 'fa-solid fa-droplet',
-                    'Swimming pool': 'fa-solid fa-person-swimming',
-                    'Backup Power (Solar/Inverter)': 'fa-solid fa-bolt',
-                    'WiFi / Fibre': 'fa-solid fa-wifi',
-                    'Air conditioning': 'fa-solid fa-wind',
-                    'Electric Fence': 'fa-solid fa-bolt-lightning',
-                    'Garden / Yard': 'fa-solid fa-leaf',
-                    '24/7 Security Guard': 'fa-solid fa-user-shield',
-                    'Solar Geyser': 'fa-solid fa-sun',
-                    'Carport / Garage': 'fa-solid fa-car',
-                    'Paved driveway': 'fa-solid fa-road'
-                  }[feature];
-
-                  return (
-                    <li key={i}>
-                      {iconClass && <i className={iconClass} style={{ marginRight: '10px', color: 'var(--primary)', width: '20px', textAlign: 'center' }}></i>}
-                      {feature}
-                    </li>
-                  );
-                })}
+                {(property.features || property.amenities || []).map((feature, i) => (
+                  <li key={i}>{feature}</li>
+                ))}
               </ul>
             </section>
 
