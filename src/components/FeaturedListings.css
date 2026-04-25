@@ -51,7 +51,7 @@
 }
 
 .listings-grid > * {
-  flex: 0 0 240px;
+  flex: 0 0 280px;
   scroll-snap-align: start;
 }
 
@@ -74,5 +74,14 @@
 
   .listings-grid > * {
     flex: 0 0 200px; /* User requested 200px size */
+  }
+
+  .listings-grid .property-title-main {
+    font-size: 15px !important;
+    line-height: 1.2 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    display: block !important;
   }
 }

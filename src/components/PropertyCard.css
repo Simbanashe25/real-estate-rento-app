@@ -19,7 +19,7 @@
 
 .property-image-container {
   position: relative;
-  height: 140px;
+  height: 180px;
   overflow: hidden;
   border-radius: 12px;
   background-color: #f0f0f0;
@@ -171,15 +171,14 @@
 }
 
 .property-title-main {
-  font-size: 1rem;
+  font-size: 20px;
   font-weight: 500;
   color: #111;
   margin: 0 0 0.35rem 0;
   line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .property-title-main strong {
@@ -195,10 +194,9 @@
   font-size: 0.88rem;
   color: #666;
   margin: 0.2rem 0 0.6rem 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1.5;
 }
 
@@ -207,6 +205,7 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 0.4rem;
+  margin-top: auto;
 }
 
 .property-stats-mini {
@@ -230,7 +229,7 @@
 }
 
 .price-value {
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: 800;
   color: #111;
 }
@@ -265,11 +264,11 @@
 }
 
 .avail-now-text {
-  color: #1a9e5c;
+  color: #000 !important;
 }
 
 .avail-future-text {
-  color: #4a6cf7;
+  color: #000 !important;
 }
 
 @media (max-width: 768px) {
@@ -284,21 +283,19 @@
   }
 
   .price-value {
-    font-size: 1.1rem; /* Increased from 0.9rem */
+    font-size: 0.9rem; 
   }
 
   .price-period {
-    font-size: 0.75rem; /* Increased from 0.65rem */
+    font-size: 0.7rem; 
   }
 
   .property-title-main {
-    font-size: 1rem;
+    font-size: 15px;
     margin-bottom: 0.25rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    white-space: nowrap;
     overflow: hidden;
-    white-space: normal;
+    text-overflow: ellipsis;
     line-height: 1.3;
   }
 
@@ -309,13 +306,13 @@
   }
 
   .stat-item {
-    font-size: 0.8rem; /* Increased from 0.65rem */
+    font-size: 0.7rem; 
     gap: 0.2rem;
   }
 
   .stat-item svg {
-    width: 14px !important; /* Increased from 10px */
-    height: 14px !important;
+    width: 12px !important; 
+    height: 12px !important;
   }
 
   .footer-location {
@@ -323,7 +320,11 @@
   }
 
   .availability-text {
-    font-size: 0.8rem; /* Increased from 0.65rem */
+    font-size: 0.7rem; 
+    color: #000 !important;
+  }
+  .avail-now-text, .avail-future-text {
+    color: #000 !important;
   }
 
   .favorite-btn {

@@ -5,7 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import { BedDouble, Bath, Square, MapPin, Share } from 'lucide-react';
+import { BedDouble, Bath, Square, MapPin, Share, Users } from 'lucide-react';
 import { supabase } from '../supabase/config';
 import { formatWhatsAppNumber } from '../utils/phoneUtils';
 import SEO from '../components/SEO';
@@ -390,6 +390,10 @@ const PropertyDetails = () => {
                 <Square size={24} strokeWidth={1.5} />
                 <span><strong>{property.sqft || '—'}</strong> sqft</span>
               </div>
+              <div className="stat">
+                <Users size={24} strokeWidth={1.5} />
+                <span><strong>{property.max_guests || '—'}</strong> Guests</span>
+              </div>
             </div>
 
 
@@ -478,7 +482,7 @@ const PropertyDetails = () => {
                     target="_blank" 
                     rel="noopener noreferrer" 
                     className="btn btn-primary" 
-                    style={{width: '100%', borderRadius: 'var(--radius-full)', justifyContent: 'center', backgroundColor: '#25D366', color: 'white', border: 'none'}}
+                    style={{width: '100%', borderRadius: 'var(--radius-full)', justifyContent: 'center', backgroundColor: '#593cfb', color: 'white', border: 'none'}}
                   >
                     WhatsApp Manager
                   </a>
@@ -528,7 +532,7 @@ const PropertyDetails = () => {
           target="_blank" 
           rel="noopener noreferrer" 
           className="btn btn-primary mobile-cta-btn" 
-          style={{backgroundColor: '#25D366', color: 'white', border: 'none', display: 'flex', alignItems: 'center', gap: '8px'}}
+          style={{backgroundColor: '#593cfb', color: 'white', border: 'none', display: 'flex', alignItems: 'center', gap: '8px'}}
         >
           <i className="fa-brands fa-whatsapp" style={{ fontSize: '20px' }}></i> WhatsApp
         </a>

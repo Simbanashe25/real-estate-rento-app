@@ -187,14 +187,14 @@
 
 .amenity-pill:hover {
   border-color: var(--primary);
-  background: rgba(217, 34, 40, 0.02);
+  background: rgba(89, 60, 251, 0.02);
 }
 
 .amenity-pill.active {
   background: var(--primary);
   color: white;
   border-color: var(--primary);
-  box-shadow: 0 4px 12px rgba(217, 34, 40, 0.2);
+  box-shadow: 0 4px 12px rgba(89, 60, 251, 0.2);
 }
 
 .form-actions {

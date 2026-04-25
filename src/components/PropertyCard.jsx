@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, BedDouble, Bath, Square, MapPin, BadgeCheck } from 'lucide-react';
+import { Heart, BedDouble, Bath, Square, MapPin, BadgeCheck, Users } from 'lucide-react';
 import { supabase } from '../supabase/config';
 import { getPropertyDisplayTitle } from '../utils/propertyUtils';
 import './PropertyCard.css';
 
 const PropertyCard = ({ property, onToggleFavorite, disableSwipe = false }) => {
   const navigate = useNavigate();
-  const { id, type, image, all_images, description, price, beds, baths, sqft, address, verified, available_from, suburb, city } = property;
+  const { id, type, image, all_images, description, price, beds, baths, sqft, address, verified, available_from, suburb, city, max_guests } = property;
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   const displayTitle = getPropertyDisplayTitle(property);
@@ -164,6 +164,12 @@ const PropertyCard = ({ property, onToggleFavorite, disableSwipe = false }) => {
               <Square size={14} strokeWidth={2} />
               <span>{sqft}</span>
             </div>
+            {max_guests && (
+              <div className="stat-item">
+                <Users size={14} strokeWidth={2} />
+                <span>{max_guests}</span>
+              </div>
+            )}
           </div>
           <div className="property-price">
             <span className="price-value">${price.toLocaleString()}</span>

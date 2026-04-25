@@ -20,10 +20,10 @@ const CATEGORY_MAP = {
   'residential': 'Residential',
   'homes': 'Residential',
   'rooms': 'Private Room',
-  'commercial': 'Commercial',
-  'industrial': 'Industrial',
-  'land': 'Land',
-  'agricultural': 'Agricultural',
+  'shared': 'Shared Room',
+  'student': 'Student Housing',
+  'apartments': 'Apartment',
+  'student-housing': 'Student Housing',
   'all': 'All Types'
 };
 
@@ -87,7 +87,7 @@ const SearchPage = () => {
     fetchProperties();
   }, []);
 
-  // Sync state with URL params when they change (e.g. user searches again from Home)
+  // Sync state with URL params when they change
   useEffect(() => {
     setLocationStr(queryParam);
     
@@ -96,6 +96,12 @@ const SearchPage = () => {
       setActiveCategory('residential');
     } else if (categoryParam === 'rooms') {
       setActiveCategory('Private Room');
+    } else if (categoryParam === 'shared') {
+      setActiveCategory('Shared Room');
+    } else if (categoryParam === 'student' || categoryParam === 'student-housing') {
+      setActiveCategory('Student Housing');
+    } else if (categoryParam === 'apartments') {
+      setActiveCategory('Apartment');
     } else {
       setActiveCategory(categoryParam);
     }
@@ -118,14 +124,6 @@ const SearchPage = () => {
         const type = p.type;
         if (categoryTarget === 'Residential') 
           return ['House', 'Townhouse', 'Apartment', 'Cottage', 'Private Room', 'Shared Room', 'Student Housing'].includes(type);
-        if (categoryTarget === 'Commercial') 
-          return ['Office', 'Retail', 'Hotel'].includes(type);
-        if (categoryTarget === 'Industrial') 
-          return ['Warehouse', 'Workshop'].includes(type);
-        if (categoryTarget === 'Land') 
-          return ['Residential Stand', 'Commercial Stand'].includes(type);
-        if (categoryTarget === 'Agricultural') 
-          return ['Farm', 'Smallholding'].includes(type);
         return type === categoryTarget;
       })();
       
@@ -207,28 +205,8 @@ const SearchPage = () => {
               <option value="Apartment">Apartment / Flat</option>
               <option value="Cottage">Cottage / Backyard Unit</option>
               <option value="Private Room">Private Room</option>
+              <option value="Shared Room">Shared Room</option>
               <option value="Student Housing">Student Housing</option>
-            </optgroup>
-            <option value="commercial">All Commercial</option>
-            <optgroup label="Commercial Types">
-              <option value="Office">Office Building</option>
-              <option value="Retail">Shop / Retail Space</option>
-              <option value="Hotel">Hotel / Lodge</option>
-            </optgroup>
-            <option value="industrial">All Industrial</option>
-            <optgroup label="Industrial Types">
-              <option value="Warehouse">Warehouse</option>
-              <option value="Workshop">Workshop</option>
-            </optgroup>
-            <option value="land">All Land / Stands</option>
-            <optgroup label="Land Types">
-              <option value="Residential Stand">Residential Stand</option>
-              <option value="Commercial Stand">Commercial Stand</option>
-            </optgroup>
-            <option value="agricultural">All Agricultural</option>
-            <optgroup label="Agricultural Types">
-              <option value="Farm">Farm / Agricultural Land</option>
-              <option value="Smallholding">Smallholding</option>
             </optgroup>
           </select>
           <select 

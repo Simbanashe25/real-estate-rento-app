@@ -2,11 +2,10 @@ import { Link } from 'react-router-dom';
 import './CategoriesGrid.css';
 
 const CATEGORIES = [
-  { id: 1, title: 'Residential', category: 'residential', count: '420+', image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800' },
-  { id: 2, title: 'Commercial', category: 'commercial', count: '86+', image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=800' },
-  { id: 3, title: 'Industrial', category: 'industrial', count: '42+', image: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=800' },
-  { id: 4, title: 'Land / Stands', category: 'land', category: 'land', count: '156+', image: 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&q=80&w=800' },
-  { id: 5, title: 'Agricultural', category: 'agricultural', count: '94+', image: 'https://images.unsplash.com/photo-1500311421090-a38263e58f02?auto=format&fit=crop&q=80&w=800' },
+  { id: 1, title: 'Entire Homes', category: 'residential', count: '420+', image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80&w=800' },
+  { id: 2, title: 'Apartments', category: 'apartments', count: '186+', image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=800' },
+  { id: 3, title: 'Private Rooms', category: 'rooms', count: '142+', image: 'https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&q=80&w=800' },
+  { id: 4, title: 'Student Housing', category: 'student-housing', count: '94+', image: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&q=80&w=800' },
 ];
 
 const CategoriesGrid = () => {

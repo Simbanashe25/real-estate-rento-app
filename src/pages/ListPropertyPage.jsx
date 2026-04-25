@@ -74,7 +74,8 @@ const ListPropertyPage = () => {
     baths: '1',
     sqft: '',
     available_from: new Date().toISOString().split('T')[0],
-    description: ''
+    description: '',
+    max_guests: '1'
   });
 
   useEffect(() => {
@@ -135,12 +136,6 @@ const ListPropertyPage = () => {
     ],
     'Specific to Apartments': [
       'Elevator / Lift', 'Parking Space', 'Complex Security'
-    ],
-    'Specific to Commercial': [
-      'Office partitions', 'Reception area', 'Parking bays', 'Backup generator'
-    ],
-    'Specific to Lodges/Hotels': [
-      'Reception desk', 'Restaurant / Bar', 'Conference rooms', 'Laundry services', 'Room service'
     ]
   };
 
@@ -238,6 +233,7 @@ const ListPropertyPage = () => {
         beds: Number(formData.beds),
         baths: Number(formData.baths),
         sqft: Number(formData.sqft),
+        max_guests: Number(formData.max_guests),
         amenities: selectedAmenities,
         image: images[0]?.url,
         all_images: images.map(img => img.url),
@@ -307,20 +303,8 @@ const ListPropertyPage = () => {
                       <option value="Apartment">Apartment / Flat</option>
                       <option value="Cottage">Cottage / Backyard Unit</option>
                       <option value="Private Room">Private Room</option>
+                      <option value="Shared Room">Shared Room</option>
                       <option value="Student Housing">Student Housing</option>
-                    </optgroup>
-                    <optgroup label="Commercial & Industrial">
-                      <option value="Office">Office Building</option>
-                      <option value="Retail">Shop / Retail Space</option>
-                      <option value="Hotel">Hotel / Lodge</option>
-                      <option value="Warehouse">Warehouse</option>
-                      <option value="Workshop">Workshop</option>
-                    </optgroup>
-                    <optgroup label="Land & Agriculture">
-                      <option value="Residential Stand">Residential Stand</option>
-                      <option value="Commercial Stand">Commercial Stand</option>
-                      <option value="Farm">Farm / Agricultural Land</option>
-                      <option value="Smallholding">Smallholding</option>
                     </optgroup>
                   </select>
                 </div>
@@ -365,6 +349,10 @@ const ListPropertyPage = () => {
                 <div className="form-group">
                   <label>Square Feet</label>
                   <input name="sqft" type="number" min="0" value={formData.sqft} onChange={handleInputChange} placeholder="e.g. 1500" required />
+                </div>
+                <div className="form-group">
+                  <label>Max Guests</label>
+                  <input name="max_guests" type="number" min="1" value={formData.max_guests} onChange={handleInputChange} placeholder="1" required />
                 </div>
               </div>
 
@@ -445,9 +433,7 @@ const ListPropertyPage = () => {
                       const target = category.replace('Specific to ', '').toLowerCase();
                       const type = formData.type.toLowerCase();
                       const matches = 
-                        (target === 'apartments' && type.includes('apartment')) ||
-                        (target === 'commercial' && (['office', 'retail', 'warehouse', 'workshop', 'commercial'].some(t => type.includes(t)))) ||
-                        (target === 'lodges/hotels' && type.includes('hotel'));
+                        (target === 'apartments' && type.includes('apartment'));
                       
                       if (!matches) return null;
                     }

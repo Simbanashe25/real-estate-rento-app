@@ -40,16 +40,16 @@
 }
 
 .badge-avail-now {
-  background-color: #e6f9f0;
-  color: #1a9e5c;
-  border: 1px solid #b2eecf;
+  background-color: #f5f5f5;
+  color: var(--text-muted);
+  border: 1px solid #ddd;
   font-weight: 600;
 }
 
 .badge-avail-future {
-  background-color: #f0f4ff;
-  color: #4a6cf7;
-  border: 1px solid #c5d2fb;
+  background-color: #f5f5f5;
+  color: var(--text-muted);
+  border: 1px solid #ddd;
   font-weight: 600;
 }
 
