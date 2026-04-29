@@ -1,0 +1,22 @@
+-- Run this in your Supabase SQL Editor
+-- This will safely add all the missing columns to the properties table.
+-- If the column already exists, it will skip it automatically.
+
+ALTER TABLE properties
+ADD COLUMN IF NOT EXISTS lat NUMERIC(10, 7),
+ADD COLUMN IF NOT EXISTS lng NUMERIC(10, 7),
+ADD COLUMN IF NOT EXISTS max_guests INTEGER DEFAULT 1,
+ADD COLUMN IF NOT EXISTS manager_name TEXT,
+ADD COLUMN IF NOT EXISTS manager_id UUID,
+ADD COLUMN IF NOT EXISTS manager_avatar TEXT,
+ADD COLUMN IF NOT EXISTS verified BOOLEAN DEFAULT false,
+ADD COLUMN IF NOT EXISTS all_images TEXT[],
+ADD COLUMN IF NOT EXISTS sqft NUMERIC,
+ADD COLUMN IF NOT EXISTS beds INTEGER,
+ADD COLUMN IF NOT EXISTS baths NUMERIC,
+ADD COLUMN IF NOT EXISTS amenities TEXT[],
+ADD COLUMN IF NOT EXISTS description TEXT,
+ADD COLUMN IF NOT EXISTS address TEXT,
+ADD COLUMN IF NOT EXISTS province TEXT,
+ADD COLUMN IF NOT EXISTS city TEXT,
+ADD COLUMN IF NOT EXISTS type TEXT;

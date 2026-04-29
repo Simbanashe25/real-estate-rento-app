@@ -1,4 +1,18 @@
-@import url("https://db.onlinewebfonts.com/c/bd8143ad5315106a3d3fc9d17e6f80e9?family=Mayonice");
+@font-face {
+  font-family: 'HTGFellix';
+  src: url('https://cdn2.hometogo.net/assets/js/5/HTGFellix-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'HTGFellix';
+  src: url('https://cdn2.hometogo.net/assets/js/5/HTGFellix-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
 
 :root {
   /* Brand Colors */
@@ -46,7 +60,7 @@
 }
 
 body {
-  font-family: 'Galano Grotesque Alt', sans-serif;
+  font-family: 'HTGFellix', sans-serif;
   color: var(--text-main);
   background-color: var(--background);
   line-height: 1.5;
@@ -76,7 +90,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Galano Grotesque Alt', sans-serif;
+  font-family: 'HTGFellix', sans-serif;
   color: var(--text-main);
   line-height: 1.2;
 }
