@@ -496,21 +496,23 @@ const PropertyDetails = () => {
           <div className="similar-properties-section">
             <div className="container">
               <h2 className="section-title">Similar {property.type}s</h2>
-              <div className="similar-carousel-wrapper">
-                <div className="similar-grid">
-                  {similarLoading ? (
-                    [1, 2, 3, 4].map(i => (
-                      <div key={`skel-sim-${i}`} className="similar-card-item">
-                        <SkeletonCard />
-                      </div>
-                    ))
-                  ) : (
-                    similarProperties.map(prop => (
-                      <div key={prop.id} className="similar-card-item">
-                        <PropertyCard property={prop} disableSwipe={true} />
-                      </div>
-                    ))
-                  )}
+              <div className="similar-carousel-container">
+                <div className="similar-carousel-wrapper">
+                  <div className="similar-grid">
+                    {similarLoading ? (
+                      [1, 2, 3, 4].map(i => (
+                        <div key={`skel-sim-${i}`} className="similar-card-item">
+                          <SkeletonCard />
+                        </div>
+                      ))
+                    ) : (
+                      similarProperties.map(prop => (
+                        <div key={prop.id} className="similar-card-item">
+                          <PropertyCard property={prop} disableSwipe={true} />
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

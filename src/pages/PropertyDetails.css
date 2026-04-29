@@ -830,15 +830,18 @@ section h3 { font-size: 1.5rem; margin-bottom: 1.5rem; }
   font-weight: 700;
 }
 
-.similar-carousel-wrapper {
+.similar-carousel-container {
   position: relative; /* For the fade overlay */
+}
+
+.similar-carousel-wrapper {
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
   padding: 10px 0;
 }
 
-.similar-carousel-wrapper::after {
+.similar-carousel-container::after {
   content: "";
   position: absolute;
   top: 0;
@@ -851,9 +854,9 @@ section h3 { font-size: 1.5rem; margin-bottom: 1.5rem; }
 }
 
 @media (max-width: 768px) {
-  .similar-carousel-wrapper::after {
+  .similar-carousel-container::after {
     width: 60px;
-    background: linear-gradient(to right, transparent, white); /* Mobile section might be white */
+    background: linear-gradient(to right, transparent, white);
   }
 }
 
