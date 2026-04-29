@@ -241,6 +241,7 @@
   .results-grid {
     grid-template-columns: 1fr; /* 1 column for a cleaner mobile layout */
     gap: 0.75rem;
+    align-items: start;
   }
 }
 

@@ -337,7 +337,7 @@ const ListPropertyPage = () => {
                 </div>
               </div>
 
-              <div className="form-row">
+              <div className="form-row form-row-compact">
                 <div className="form-group">
                   <label>Bedrooms</label>
                   <input name="beds" type="number" min="0" value={formData.beds} onChange={handleInputChange} placeholder="1" required />
@@ -346,8 +346,11 @@ const ListPropertyPage = () => {
                   <label>Bathrooms</label>
                   <input name="baths" type="number" min="0" step="0.5" value={formData.baths} onChange={handleInputChange} placeholder="1" required />
                 </div>
+              </div>
+
+              <div className="form-row form-row-compact">
                 <div className="form-group">
-                  <label>Square Feet</label>
+                  <label>Size (sqft)</label>
                   <input name="sqft" type="number" min="0" value={formData.sqft} onChange={handleInputChange} placeholder="e.g. 1500" required />
                 </div>
                 <div className="form-group">

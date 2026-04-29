@@ -286,19 +286,20 @@ const UserProfile = () => {
               <div className="profile-listings-grid">
                 {myListings.map(property => (
                   <div key={property.id} className="listing-with-actions">
-                    {property.status === 'occupied' && (
-                      <div className="occupied-overlay">Occupied</div>
-                    )}
                     <PropertyCard property={property} />
                     <div className="listing-action-bar">
                       <button
                         className={`action-bar-btn ${property.status === 'occupied' ? 'btn-reopen' : 'btn-occupy'}`}
                         onClick={() => handleToggleOccupied(property)}
                       >
-                        {property.status === 'occupied' ? 'Mark Available' : 'Mark Occupied'}
+                        {property.status === 'occupied' ? (
+                          <div className="action-icon-wrapper"><i className="fas fa-check-circle"></i><span>Open</span></div>
+                        ) : (
+                          <div className="action-icon-wrapper"><i className="fas fa-minus-circle"></i><span>Close</span></div>
+                        )}
                       </button>
                       <button className="action-bar-btn btn-delete" onClick={() => handleDeleteListing(property.id)}>
-                        <Trash2 size={13} />
+                        <div className="action-icon-wrapper"><i className="fas fa-trash-alt"></i><span>Del</span></div>
                       </button>
                     </div>
                   </div>
@@ -575,14 +576,11 @@ const UserProfile = () => {
                     {[1,2,3].map(i => <SkeletonCard key={i} />)}
                   </div>
                 ) : myListings.length > 0 ? (
-                  <div className="profile-listings-grid">
-                    {myListings.map(property => (
-                      <div key={property.id} className="listing-with-actions">
-                        {property.status === 'occupied' && (
-                          <div className="occupied-overlay">Occupied</div>
-                        )}
-                        <PropertyCard property={property} />
-                        <div className="listing-action-bar">
+                    <div className="profile-listings-grid">
+                      {myListings.map(property => (
+                        <div key={property.id} className="listing-with-actions">
+                          <PropertyCard property={property} />
+                          <div className="listing-action-bar">
                           <button
                             className={`action-bar-btn ${property.status === 'occupied' ? 'btn-reopen' : 'btn-occupy'}`}
                             onClick={() => handleToggleOccupied(property)}

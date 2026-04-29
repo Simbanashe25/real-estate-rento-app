@@ -83,6 +83,7 @@
   .favorites-grid {
     grid-template-columns: 1fr;
     gap: 0.75rem;
+    align-items: start;
   }
 }
 
