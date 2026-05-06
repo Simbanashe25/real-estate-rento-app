@@ -11,6 +11,13 @@
   .property-details-page .container {
     max-width: 1180px; /* Focused container for desktop */
   }
+
+  .gallery-wrapper-mobile-full {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    width: 100%;
+  }
 }
 
 /* Force the navbar on the details page to align with the gallery */
@@ -171,7 +178,7 @@
   }
 
   .show-all-btn {
-    display: none;
+    display: none !important;
   }
 
   /* Photo count pill — bottom-right, Zillow style */
@@ -347,26 +354,31 @@
 
 .show-all-btn {
   position: absolute;
-  bottom: 16px;
-  right: 16px;
-  background: white;
-  border: 1px solid #222;
-  padding: 6px 14px;
-  border-radius: 8px;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 8px 18px;
+  border-radius: 30px; /* Pill shape */
   display: flex;
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   cursor: pointer;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
-  color: #222;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  color: #555; /* Grey text and icon */
   z-index: 10;
+  transition: all 0.2s ease;
 }
 
 .show-all-btn:hover {
-  background: #f7f7f7;
-  transform: scale(1.02);
+  background: #ffffff;
+  transform: scale(1.03);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  color: #333; /* Slightly darker on hover */
 }
 
 .property-subheader {

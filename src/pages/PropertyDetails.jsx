@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -18,6 +18,16 @@ const DefaultIcon = L.icon({ iconUrl: icon, shadowUrl: iconShadow, iconSize: [25
 L.Marker.prototype.options.icon = DefaultIcon;
 
 
+const MapUpdater = ({ position }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (position) {
+      map.setView(position, 16);
+    }
+  }, [position, map]);
+  return null;
+};
+
 const PropertyDetails = () => {
   const { id } = useParams();
   const [property, setProperty] = useState(null);
@@ -32,6 +42,8 @@ const PropertyDetails = () => {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [mobileSlideIndex, setMobileSlideIndex] = useState(1);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  const [isAmenitiesExpanded, setIsAmenitiesExpanded] = useState(false);
   const galleryRef = useRef(null);
 
   const navigate = useNavigate();
@@ -92,14 +104,14 @@ const PropertyDetails = () => {
         if (data.lat && data.lng) {
           setMapPosition([data.lat, data.lng]);
         } else {
-          // Geocode using Mapbox Geocoding API - ensure Zimbabwe context
+          // Geocode using OpenStreetMap Nominatim - ensure Zimbabwe context
           const addressQuery = `${data.address || data.suburb}, ${data.city}, Zimbabwe`;
-          fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(addressQuery)}.json?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}&limit=1`)
+          fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(addressQuery)}&format=json&limit=1`)
             .then(res => res.json())
             .then(geoData => {
-              if (geoData && geoData.features && geoData.features.length > 0) {
-                const [lon, lat] = geoData.features[0].center;
-                setMapPosition([lat, lon]);
+              if (geoData && geoData.length > 0) {
+                const { lat, lon } = geoData[0];
+                setMapPosition([parseFloat(lat), parseFloat(lon)]);
               } else {
                 setMapPosition([-17.8248, 31.0530]); // Harare Fallback
               }
@@ -400,17 +412,68 @@ const PropertyDetails = () => {
             <section className="about-section">
               <h3>About this property</h3>
               <div className="description-text">
-                {property.description}
+                {(() => {
+                  const desc = property.description || '';
+                  const words = desc.split(/\s+/).filter(Boolean);
+                  const isLong = words.length > 20;
+                  
+                  if (isLong && !isDescriptionExpanded) {
+                    return (
+                      <>
+                        {words.slice(0, 20).join(' ')}...
+                        <button 
+                          onClick={() => setIsDescriptionExpanded(true)} 
+                          style={{background: 'none', border: 'none', color: 'var(--primary)', fontWeight: '600', padding: '0', marginLeft: '8px', textDecoration: 'underline', cursor: 'pointer', fontSize: '1rem', display: 'inline-flex', alignItems: 'center', gap: '4px'}}
+                        >
+                          Read more <i className="fa-solid fa-chevron-down" style={{fontSize: '0.8em'}}></i>
+                        </button>
+                      </>
+                    );
+                  }
+                  
+                  return (
+                    <>
+                      {desc}
+                      {isLong && (
+                        <button 
+                          onClick={() => setIsDescriptionExpanded(false)} 
+                          style={{background: 'none', border: 'none', color: 'var(--primary)', fontWeight: '600', padding: '0', marginTop: '12px', textDecoration: 'underline', cursor: 'pointer', fontSize: '1rem', display: 'flex', alignItems: 'center', gap: '4px'}}
+                        >
+                          Show less <i className="fa-solid fa-chevron-up" style={{fontSize: '0.8em'}}></i>
+                        </button>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             </section>
 
             <section className="features-section">
               <h3>Features & Amenities</h3>
-              <ul className="features-list">
-                {(property.features || property.amenities || []).map((feature, i) => (
-                  <li key={i}>{feature}</li>
-                ))}
-              </ul>
+              {(() => {
+                const items = property.features || property.amenities || [];
+                const isLong = items.length > 10;
+                const displayItems = isLong && !isAmenitiesExpanded ? items.slice(0, 10) : items;
+                
+                return (
+                  <>
+                    <ul className="features-list">
+                      {displayItems.map((feature, i) => (
+                        <li key={i}>{feature}</li>
+                      ))}
+                    </ul>
+                    {isLong && (
+                      <button 
+                        onClick={() => setIsAmenitiesExpanded(!isAmenitiesExpanded)} 
+                        style={{background: 'none', border: 'none', color: 'var(--primary)', fontWeight: '600', padding: '0', marginTop: '16px', textDecoration: 'underline', cursor: 'pointer', fontSize: '1rem', display: 'inline-flex', alignItems: 'center', gap: '6px'}}
+                      >
+                        {isAmenitiesExpanded ? 'Show less' : `Show all ${items.length} amenities`}
+                        <i className={`fa-solid fa-chevron-${isAmenitiesExpanded ? 'up' : 'down'}`} style={{fontSize: '0.8em'}}></i>
+                      </button>
+                    )}
+                  </>
+                );
+              })()}
             </section>
 
             <section className="map-section">
@@ -419,16 +482,16 @@ const PropertyDetails = () => {
                 {mapPosition ? (
                   <div className="map-inner">
                     <MapContainer 
-                      key={`${mapPosition[0]}-${mapPosition[1]}`}
                       center={mapPosition} 
                       zoom={16} 
                       scrollWheelZoom={false} 
                       style={{ height: "100%", width: "100%", borderRadius: "12px", zIndex: 1 }} 
                       attributionControl={false}
                     >
+                      <MapUpdater position={mapPosition} />
                       <TileLayer
-                        url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`}
-                        attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>'
+                        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
                       />
                       <Marker position={mapPosition}>
                         <Popup>

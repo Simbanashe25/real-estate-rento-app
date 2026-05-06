@@ -212,10 +212,11 @@ const ListPropertyPage = () => {
       let lng = null;
       try {
         const query = encodeURIComponent(`${formData.suburb}, ${formData.city}, Zimbabwe`);
-        const geoRes = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}&limit=1`);
+        const geoRes = await fetch(`https://nominatim.openstreetmap.org/search?q=${query}&format=json&limit=1`);
         const geoData = await geoRes.json();
-        if (geoData.features && geoData.features.length > 0) {
-          [lng, lat] = geoData.features[0].center;
+        if (geoData && geoData.length > 0) {
+          lat = parseFloat(geoData[0].lat);
+          lng = parseFloat(geoData[0].lon);
         }
       } catch (geoErr) {
         console.warn("Geocoding failed, falling back to null coordinates:", geoErr);

@@ -22,6 +22,7 @@ const ListerProfilePage = () => {
   const [listerProfile, setListerProfile] = useState(null);
   const [listerListings, setListerListings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [visibleCount, setVisibleCount] = useState(15);
 
   useEffect(() => {
     document.body.classList.add('hide-nav-mobile');
@@ -169,13 +170,25 @@ const ListerProfilePage = () => {
                     <SkeletonCard key={`skel-lister-${i}`} />
                   ))
                 ) : listerListings.length > 0 ? (
-                  listerListings.map(property => (
+                  listerListings.slice(0, visibleCount).map(property => (
                     <PropertyCard key={property.id} property={property} />
                   ))
                 ) : (
                   <p className="no-data">No active listings from this member yet.</p>
                 )}
               </div>
+              
+              {!isLoading && visibleCount < listerListings.length && (
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2.5rem' }}>
+                  <button 
+                    className="btn btn-outline" 
+                    onClick={() => setVisibleCount(prev => prev + 15)}
+                    style={{ padding: '12px 32px', fontWeight: '600', fontSize: '1.05rem', borderRadius: '30px' }}
+                  >
+                    Show more listings
+                  </button>
+                </div>
+              )}
             </section>
           </div>
         </div>

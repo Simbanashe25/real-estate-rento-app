@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -35,6 +35,16 @@ const CITY_COORDINATES = {
   'Masvingo': [-20.0637, 30.8277],
   'Kwekwe': [-18.9163, 29.8053],
   'Chinhoyi': [-17.3592, 30.2039]
+};
+
+const MapUpdater = ({ center }) => {
+  const map = useMap();
+  useEffect(() => {
+    if (center) {
+      map.setView(center);
+    }
+  }, [center, map]);
+  return null;
 };
 
 const SearchPage = () => {
@@ -293,9 +303,10 @@ const SearchPage = () => {
               style={{ height: "100%", width: "100%", zIndex: 1 }}
               attributionControl={false}
             >
+              <MapUpdater center={results.length > 0 ? [results[0].lat || -17.8248, results[0].lng || 31.0530] : [-17.8248, 31.0530]} />
               <TileLayer
-                url={`https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token=${import.meta.env.VITE_MAPBOX_TOKEN}`}
-                attribution='&copy; <a href="https://www.mapbox.com/about/maps/">Mapbox</a>'
+                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
               />
               {results.map(property => {
                 const lat = property.lat || CITY_COORDINATES[property.city]?.[0] || -17.8248;

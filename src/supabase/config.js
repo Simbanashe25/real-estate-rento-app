@@ -7,4 +7,18 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('Supabase URL or Anon Key is missing. Check your .env file.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+    detectSessionInUrl: true
+  }
+});
+
+// Global error handler for auth session issues
+supabase.auth.onAuthStateChange((event, session) => {
+  if (event === 'TOKEN_REFRESH_FAILED') {
+    console.warn('Supabase token refresh failed. Clearing session.');
+    supabase.auth.signOut();
+  }
+});
