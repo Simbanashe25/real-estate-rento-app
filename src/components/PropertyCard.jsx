@@ -121,7 +121,7 @@ const PropertyCard = ({ property, onToggleFavorite, disableSwipe = false }) => {
         )}
 
         <div className="property-tags">
-          <span className={`badge ${type?.toLowerCase().includes('room') ? 'badge-room' : 'badge-home'}`}>
+          <span className={`badge ${(type || '').toLowerCase().includes('room') ? 'badge-room' : 'badge-home'}`}>
             {type}
           </span>
           {verified && (

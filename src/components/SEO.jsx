@@ -1,15 +1,14 @@
-import { useLayoutEffect } from 'react';
+import { useEffect } from 'react';
 
 /**
  * A lightweight SEO component that updates document title and meta tags.
  */
 const SEO = ({ title, description, keywords, ogTitle, ogDescription, ogImage }) => {
-  useLayoutEffect(() => {
+  useEffect(() => {
     // Update Title
     const baseTitle = 'Rentor';
     const newTitle = title ? `${title} | ${baseTitle}` : `${baseTitle} - Find Your Perfect Home in Zimbabwe`;
     document.title = newTitle;
-    console.log(`SEO Update: Setting title to "${newTitle}"`);
 
     // Helper to update or create meta tags
     const updateOrCreateMetaTag = (selector, name, property, content) => {

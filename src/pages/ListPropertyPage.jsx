@@ -435,7 +435,7 @@ const ListPropertyPage = () => {
                     // Dynamic filtering for specific categories
                     if (category.startsWith('Specific to ')) {
                       const target = category.replace('Specific to ', '').toLowerCase();
-                      const type = formData.type.toLowerCase();
+                      const type = (formData.type || '').toLowerCase();
                       const matches = 
                         (target === 'apartments' && type.includes('apartment'));
                       

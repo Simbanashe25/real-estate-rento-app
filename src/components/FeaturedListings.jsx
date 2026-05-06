@@ -23,9 +23,12 @@ const FeaturedListings = () => {
         
         const properties = data || [];
         setCategories({
-          homes: properties.filter(p => !p.type?.toLowerCase().includes('room') && !p.type?.toLowerCase().includes('shared')),
-          rooms: properties.filter(p => p.type?.toLowerCase().includes('room')),
-          shared: properties.filter(p => p.type?.toLowerCase().includes('shared'))
+          homes: properties.filter(p => {
+            const type = (p.type || '').toLowerCase();
+            return !type.includes('room') && !type.includes('shared');
+          }),
+          rooms: properties.filter(p => (p.type || '').toLowerCase().includes('room')),
+          shared: properties.filter(p => (p.type || '').toLowerCase().includes('shared'))
         });
       } catch (error) {
         console.error('Error fetching listings:', error);

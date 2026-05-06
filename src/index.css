@@ -65,7 +65,16 @@ body {
   background-color: var(--background);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  overscroll-behavior-y: none; /* Prevent bounce on mobile */
+  /* Removed overscroll-behavior-y: none to prevent potential scroll issues on some mobile browsers */
+}
+
+html, body, #root {
+  min-height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
 }
 
 /* App-like Feel Resets */
@@ -78,6 +87,9 @@ body {
 
   .app-container {
     width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 
   .main-content {
