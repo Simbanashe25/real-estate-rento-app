@@ -13,6 +13,7 @@ const Footer = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const isHomePage = location.pathname === '/';
   const isSearchPage = location.pathname.startsWith('/search');
 
   if (isSearchPage || (isMobile && !isHomePage)) return null;
