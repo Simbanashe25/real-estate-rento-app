@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
+import { useSettings } from '../context/SettingsContext';
 import './Footer.css';
 
 const Footer = () => {
   const location = useLocation();
+  const { settings } = useSettings();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
   useEffect(() => {
@@ -24,12 +26,16 @@ const Footer = () => {
         <div className="footer-brand">
           <Link to="/" className="footer-logo">
             <div className="logo-icon">
-              <Home size={20} color="white" />
+              {settings.app_logo ? (
+                <img src={settings.app_logo} alt="Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+              ) : (
+                <Home size={20} color="white" />
+              )}
             </div>
-            <span className="logo-text">Rentor</span>
+            <span className="logo-text">{settings.app_name}</span>
           </Link>
           <p className="footer-desc">
-            Your destination for finding the perfect home or room to rent. We connect renters with the best properties.
+            {settings.app_description}
           </p>
         </div>
 
@@ -45,7 +51,7 @@ const Footer = () => {
           </div>
 
           <div className="link-group">
-            <h4 className="link-title">Rentor</h4>
+            <h4 className="link-title">{settings.app_name}</h4>
             <ul>
               <li><Link to="/about">About Us</Link></li>
               <li><Link to="/careers">Careers</Link></li>
@@ -58,7 +64,7 @@ const Footer = () => {
       
       <div className="footer-bottom">
         <div className="container">
-          <p>&copy; {new Date().getFullYear()} Rentor. All rights reserved. Prices and availability subject to change.</p>
+          <p>&copy; {new Date().getFullYear()} {settings.app_name}. All rights reserved. Prices and availability subject to change.</p>
         </div>
       </div>
     </footer>

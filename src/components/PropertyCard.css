@@ -136,8 +136,8 @@
 }
 
 .badge-verified {
-  background-color: rgba(255, 255, 255, 0.9);
-  padding: 4px;
+  background-color: transparent;
+  padding: 0;
   border-radius: 50%;
 }
 
@@ -277,7 +277,7 @@
   }
 
   .property-image-container {
-    height: 200px;
+    height: 180px;
     position: relative;
     overflow: hidden;
     border-radius: 8px;
@@ -332,8 +332,8 @@
   }
 
   .stat-item svg {
-    width: 12px !important; 
-    height: 12px !important;
+    width: 16px !important; 
+    height: 16px !important;
   }
 
   .footer-location {

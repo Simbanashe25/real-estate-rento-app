@@ -116,9 +116,8 @@ const Hero = () => {
               />
             </div>
             <button type="submit" className="btn btn-primary search-submit">
-              <Search size={20} className="hide-desktop" />
-              <Search size={20} className="hide-mobile" />
-              <span className="hide-mobile">Search</span>
+              <Search size={20} />
+              <span>Search</span>
             </button>
           </form>
         </div>

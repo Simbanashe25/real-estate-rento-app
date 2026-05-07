@@ -286,22 +286,33 @@ const UserProfile = () => {
               <div className="profile-listings-grid">
                 {myListings.map(property => (
                   <div key={property.id} className="listing-with-actions">
-                    <PropertyCard property={property} />
-                    <div className="listing-action-bar">
-                      <button
-                        className={`action-bar-btn ${property.status === 'occupied' ? 'btn-reopen' : 'btn-occupy'}`}
-                        onClick={() => handleToggleOccupied(property)}
-                      >
-                        {property.status === 'occupied' ? (
-                          <div className="action-icon-wrapper"><i className="fas fa-check-circle"></i><span>Open</span></div>
-                        ) : (
-                          <div className="action-icon-wrapper"><i className="fas fa-minus-circle"></i><span>Close</span></div>
-                        )}
-                      </button>
-                      <button className="action-bar-btn btn-delete" onClick={() => handleDeleteListing(property.id)}>
-                        <div className="action-icon-wrapper"><i className="fas fa-trash-alt"></i><span>Del</span></div>
-                      </button>
-                    </div>
+                      <PropertyCard property={property} />
+                      {!property.verified ? (
+                        <div className="pending-approval-row">
+                          <div className="pending-approval-badge-v2">
+                            <i className="fa-solid fa-clock"></i> Pending Approval
+                          </div>
+                          <button className="action-bar-btn btn-delete-v2" onClick={() => handleDeleteListing(property.id)}>
+                            <i className="fas fa-trash-alt"></i>
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="listing-action-bar">
+                          <button
+                            className={`action-bar-btn ${property.status === 'occupied' ? 'btn-reopen' : 'btn-occupy'}`}
+                            onClick={() => handleToggleOccupied(property)}
+                          >
+                            {property.status === 'occupied' ? (
+                              <div className="action-icon-wrapper"><i className="fas fa-check-circle"></i><span>Open</span></div>
+                            ) : (
+                              <div className="action-icon-wrapper"><i className="fas fa-minus-circle"></i><span>Close</span></div>
+                            )}
+                          </button>
+                          <button className="action-bar-btn btn-delete" onClick={() => handleDeleteListing(property.id)}>
+                            <div className="action-icon-wrapper"><i className="fas fa-trash-alt"></i><span>Del</span></div>
+                          </button>
+                        </div>
+                      )}
                   </div>
                 ))}
               </div>
@@ -580,25 +591,36 @@ const UserProfile = () => {
                       {myListings.map(property => (
                         <div key={property.id} className="listing-with-actions">
                           <PropertyCard property={property} />
-                          <div className="listing-action-bar">
-                          <button
-                            className={`action-bar-btn ${property.status === 'occupied' ? 'btn-reopen' : 'btn-occupy'}`}
-                            onClick={() => handleToggleOccupied(property)}
-                            title={property.status === 'occupied' ? 'Mark as available' : 'Mark as occupied'}
-                          >
-                            {property.status === 'occupied'
-                              ? <><i className="fa-solid fa-circle-check" style={{ marginRight: '5px' }}></i>Mark Available</>
-                              : <><i className="fa-solid fa-ban" style={{ marginRight: '5px' }}></i>Mark Occupied</>
-                            }
-                          </button>
-                          <button
-                            className="action-bar-btn btn-delete"
-                            onClick={() => handleDeleteListing(property.id)}
-                            title="Delete listing"
-                          >
-                            <Trash2 size={13} />
-                          </button>
-                        </div>
+                          {!property.verified ? (
+                            <div className="pending-approval-row-desktop">
+                              <div className="pending-status-text">
+                                <i className="fa-solid fa-clock"></i> Pending Approval
+                              </div>
+                              <button className="action-bar-btn btn-delete-desktop" onClick={() => handleDeleteListing(property.id)} title="Delete listing">
+                                <Trash2 size={16} />
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="listing-action-bar">
+                              <button
+                                className={`action-bar-btn ${property.status === 'occupied' ? 'btn-reopen' : 'btn-occupy'}`}
+                                onClick={() => handleToggleOccupied(property)}
+                                title={property.status === 'occupied' ? 'Mark as available' : 'Mark as occupied'}
+                              >
+                                {property.status === 'occupied'
+                                  ? <><i className="fa-solid fa-circle-check" style={{ marginRight: '5px' }}></i>Mark Available</>
+                                  : <><i className="fa-solid fa-ban" style={{ marginRight: '5px' }}></i>Mark Occupied</>
+                                }
+                              </button>
+                              <button
+                                className="action-bar-btn btn-delete"
+                                onClick={() => handleDeleteListing(property.id)}
+                                title="Delete listing"
+                              >
+                                <Trash2 size={13} />
+                              </button>
+                            </div>
+                          )}
                       </div>
                     ))}
                   </div>

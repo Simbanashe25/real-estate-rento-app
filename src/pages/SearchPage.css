@@ -243,6 +243,10 @@
     gap: 0.75rem;
     align-items: start;
   }
+
+  .search-page .property-image-container {
+    height: 200px;
+  }
 }
 
 .floating-view-toggle {

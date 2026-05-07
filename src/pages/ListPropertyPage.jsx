@@ -75,7 +75,8 @@ const ListPropertyPage = () => {
     sqft: '',
     available_from: new Date().toISOString().split('T')[0],
     description: '',
-    max_guests: '1'
+    max_guests: '1',
+    status: 'available'
   });
 
   useEffect(() => {
@@ -151,6 +152,11 @@ const ListPropertyPage = () => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
+    if (images.length + files.length > 15) {
+      alert('Maximum 15 images allowed. Please select fewer images.');
+      return;
+    }
+
     files.forEach(async (file) => {
       const fileId = Math.random().toString(36).substr(2, 9);
       setImages(prev => [...prev, { id: fileId, url: URL.createObjectURL(file), isPlaceholder: true }]);
@@ -194,8 +200,13 @@ const ListPropertyPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (images.length < 4) {
-      alert('Please upload at least 4 images of your property to provide a better viewing experience.');
+    if (images.length < 5) {
+      alert('Please upload at least 5 images of your property to provide a better viewing experience.');
+      return;
+    }
+    
+    if (images.length > 15) {
+      alert('Maximum 15 images allowed.');
       return;
     }
     
@@ -239,6 +250,7 @@ const ListPropertyPage = () => {
         image: images[0]?.url,
         all_images: images.map(img => img.url),
         verified: false,
+        status: 'available',
         manager_name: user.user_metadata?.full_name || user.email || 'Rentor Member',
         manager_id: user.id,
         manager_avatar: user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.user_metadata?.full_name || 'User')}&background=random`,
@@ -267,9 +279,9 @@ const ListPropertyPage = () => {
       <div className="list-property-page container">
         <div className="success-state glass-panel animate-fade-in">
           <CheckCircle size={64} className="success-icon" />
-          <h1>Property Listed Successfully!</h1>
-          <p>Your property is now live and stored securely in the cloud.</p>
-          <button className="btn btn-primary" onClick={() => window.location.href = '/'}>Return Home</button>
+          <h1>Property Submitted for Review!</h1>
+          <p>Your property has been received. Our team will review and approve it shortly before it goes live.</p>
+          <button className="btn btn-primary" onClick={() => window.location.href = '/profile'}>View in My Listings</button>
         </div>
       </div>
     );
@@ -395,7 +407,7 @@ const ListPropertyPage = () => {
                 />
                 <Upload size={48} className="upload-icon" />
                 <h3>{isAnyUploading ? 'Uploading High-Speed...' : 'Click to upload photos'}</h3>
-                <p>Images are automatically compressed for maximum speed.</p>
+                <p>Minimum 5 images, Maximum 15 images.</p>
                 <div className="btn btn-outline" style={{marginTop: '1rem'}}>
                   {isAnyUploading ? 'Uploading...' : 'Browse Files'}
                 </div>
@@ -421,10 +433,12 @@ const ListPropertyPage = () => {
               )}
 
               <div className="image-count-indicator">
-                {images.length < 3 ? (
-                  <span className="text-danger small">{3 - images.length} more images required</span>
+                {images.length < 5 ? (
+                  <span className="text-danger small">{5 - images.length} more images required</span>
+                ) : images.length > 15 ? (
+                  <span className="text-danger small">{images.length - 15} extra images (max 15 allowed)</span>
                 ) : (
-                  <span className="text-success small">✓ Minimum requirement met</span>
+                  <span className="text-success small">✓ {images.length} images uploaded (Maximum 15)</span>
                 )}
               </div>
 
@@ -465,7 +479,7 @@ const ListPropertyPage = () => {
 
               <div className="form-actions space-between mt-4">
                 <button type="button" className="btn btn-outline" onClick={() => setStep(1)} disabled={isFinalizing}>Back</button>
-                <button type="submit" className="btn btn-primary" disabled={isFinalizing || images.length < 3 || isAnyUploading}>
+                <button type="submit" className="btn btn-primary" disabled={isFinalizing || images.length < 5 || images.length > 15 || isAnyUploading}>
                   {isFinalizing ? <><Loader2 className="animate-spin" size={18} /> Finalizing...</> : 'Publish Listing'}
                 </button>
               </div>

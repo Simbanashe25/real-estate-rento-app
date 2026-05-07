@@ -15,7 +15,7 @@ const FeaturedListings = () => {
         const { data, error } = await supabase
           .from('properties')
           .select('*')
-          .neq('status', 'occupied')
+          .eq('verified', true)
           .order('created_at', { ascending: false })
           .limit(30);
 

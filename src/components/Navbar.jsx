@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, CircleUser, Menu } from 'lucide-react';
 import { supabase } from '../supabase/config';
+import { useSettings } from '../context/SettingsContext';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -9,6 +10,7 @@ const Navbar = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [scrolled, setScrolled] = useState(false);
+  const { settings } = useSettings();
 
   const isHomePage = location.pathname === '/';
   const isPropertyDetails = location.pathname.startsWith('/property/');
@@ -63,10 +65,16 @@ const Navbar = () => {
     <nav className={`navbar ${(scrolled || !isHomePage) ? 'navbar-scrolled' : ''}`}>
       <div className="container navbar-container">
         <Link to="/" className="navbar-logo">
-          <div className="logo-icon">
-            <Home size={24} color="white" />
+          <div className="logo-icon-container">
+            {settings.app_logo ? (
+              <img src={settings.app_logo} alt="Logo" className="custom-logo" />
+            ) : (
+              <div className="default-logo">
+                <Home size={24} color="white" />
+                <span className="logo-text">{settings.app_name}</span>
+              </div>
+            )}
           </div>
-          <span className="logo-text">Rentor</span>
         </Link>
         
         <div className="navbar-links">

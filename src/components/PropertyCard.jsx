@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, BedDouble, Bath, Square, MapPin, BadgeCheck, Users } from 'lucide-react';
+import { Heart, BedDouble, Bath, Square, MapPin, BadgeCheck, UsersRound } from 'lucide-react';
 import { supabase } from '../supabase/config';
 import { getPropertyDisplayTitle } from '../utils/propertyUtils';
 import './PropertyCard.css';
@@ -153,20 +153,20 @@ const PropertyCard = ({ property, onToggleFavorite, disableSwipe = false }) => {
         <div className="property-header">
           <div className="property-stats-mini">
             <div className="stat-item">
-              <BedDouble size={14} strokeWidth={2} />
+              <BedDouble size={16} strokeWidth={2} />
               <span>{beds}</span>
             </div>
             <div className="stat-item">
-              <Bath size={14} strokeWidth={2} />
+              <Bath size={16} strokeWidth={2} />
               <span>{baths}</span>
             </div>
             <div className="stat-item">
-              <Square size={14} strokeWidth={2} />
+              <Square size={16} strokeWidth={2} />
               <span>{sqft}</span>
             </div>
             {max_guests && (
               <div className="stat-item">
-                <Users size={14} strokeWidth={2} />
+                <UsersRound size={16} strokeWidth={2} />
                 <span>{max_guests}</span>
               </div>
             )}

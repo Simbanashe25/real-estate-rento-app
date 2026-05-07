@@ -1,13 +1,15 @@
 import { useEffect } from 'react';
+import { useSettings } from '../context/SettingsContext';
 
 /**
  * A lightweight SEO component that updates document title and meta tags.
  */
 const SEO = ({ title, description, keywords, ogTitle, ogDescription, ogImage }) => {
+  const { settings } = useSettings();
   useEffect(() => {
     // Update Title
-    const baseTitle = 'Rentor';
-    const newTitle = title ? `${title} | ${baseTitle}` : `${baseTitle} - Find Your Perfect Home in Zimbabwe`;
+    const baseTitle = settings.app_name || 'Rentor';
+    const newTitle = title ? `${title} | ${baseTitle}` : `${baseTitle} - Find Your Perfect Home`;
     document.title = newTitle;
 
     // Helper to update or create meta tags

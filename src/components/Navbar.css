@@ -35,23 +35,40 @@
   z-index: 2;
 }
 
-.logo-icon {
-  background-color: var(--primary);
-  width: 42px;
-  height: 42px;
-  border-radius: 12px;
+.logo-icon-container {
   display: flex;
   align-items: center;
-  justify-content: center;
+  height: 100%;
+  max-width: 220px; /* Allow for wider logos */
+}
+
+.custom-logo {
+  height: 50px; /* Increased height to cover area */
+  width: auto;
+  object-fit: contain;
+  transition: height 0.3s ease;
+}
+
+.navbar-scrolled .custom-logo {
+  height: 42px; /* Slightly smaller when scrolled */
+}
+
+.default-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background-color: var(--primary);
+  padding: 0.5rem 1rem;
+  border-radius: 12px;
   box-shadow: 0 4px 12px rgba(89, 60, 251, 0.2);
 }
 
 .logo-text {
   font-family: 'HTGFellix', sans-serif;
-  font-size: 1.9rem;
+  font-size: 1.6rem;
   font-weight: 700;
-  color: inherit;
-  letter-spacing: normal;
+  color: white;
+  letter-spacing: -0.02em;
   line-height: 1;
 }
 
@@ -166,19 +183,12 @@
     height: 60px; /* Slimmer height for mobile */
   }
   
-  .logo-icon {
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-  }
-  
-  .logo-icon svg {
-    width: 18px !important;
-    height: 18px !important;
+  .custom-logo {
+    height: 40px;
   }
   
   .logo-text {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 }
 

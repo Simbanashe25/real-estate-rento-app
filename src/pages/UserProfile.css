@@ -786,3 +786,76 @@
     display: none !important;
   }
 }
+
+/* ── Pending Approval Layout ── */
+.pending-approval-row {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background-color: #fffbeb;
+  border-left: 1px solid #fde68a;
+  height: 100%;
+  width: 65px;
+}
+
+.pending-approval-badge-v2 {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  writing-mode: vertical-lr;
+  text-orientation: mixed;
+  color: #92400e;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  gap: 4px;
+}
+
+.btn-delete-v2 {
+  flex: 0 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fef2f2;
+  color: #dc2626;
+  border: none;
+  border-top: 1px solid #fee2e2;
+  padding: 0;
+  height: 100%;
+}
+
+.pending-approval-row-desktop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fffbeb;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid #fde68a;
+}
+
+.pending-status-text {
+  color: #92400e;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-delete-desktop {
+  color: #dc2626;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-delete-desktop:hover {
+  background: #fef2f2;
+}
+
+

@@ -33,6 +33,7 @@ const ListerProfilePage = () => {
         const { data: listings, error: listError } = await supabase
           .from('properties')
           .select('*')
+          .eq('verified', true)
           .ilike('manager_name', decodedName);
 
         if (listError) throw listError;

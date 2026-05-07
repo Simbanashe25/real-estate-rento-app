@@ -1,11 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import { BedDouble, Bath, Square, MapPin, Share, Users } from 'lucide-react';
+import { BedDouble, Bath, Square, MapPin, Share, Users, Images, X } from 'lucide-react';
 import { supabase } from '../supabase/config';
 import { formatWhatsAppNumber } from '../utils/phoneUtils';
 import SEO from '../components/SEO';
@@ -44,9 +44,14 @@ const PropertyDetails = () => {
   const [mobileSlideIndex, setMobileSlideIndex] = useState(1);
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isAmenitiesExpanded, setIsAmenitiesExpanded] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [reportReason, setReportReason] = useState('');
+  const [reportDetails, setReportDetails] = useState('');
+  const [isReporting, setIsReporting] = useState(false);
   const galleryRef = useRef(null);
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const getAvailabilityStatus = () => {
     if (!property) return '';
@@ -63,10 +68,11 @@ const PropertyDetails = () => {
   };
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
     });
-  }, []);
+  }, [id]);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -152,6 +158,7 @@ const PropertyDetails = () => {
           .from('properties')
           .select('*')
           .eq('type', property.type)
+          .eq('verified', true)
           .neq('id', id)
           .neq('status', 'occupied')
           .limit(8);
@@ -199,6 +206,41 @@ const PropertyDetails = () => {
       document.body.style.overflow = ''; // cleanup on unmount
     };
   }, []);
+
+  const handleReportSubmit = async (e) => {
+    e.preventDefault();
+    if (!reportReason) return;
+
+    setIsReporting(true);
+    try {
+      const { error } = await supabase
+        .from('reports')
+        .insert([{
+          property_id: id,
+          user_id: user?.id || null,
+          reason: reportReason,
+          details: reportDetails,
+          created_at: new Date().toISOString()
+        }]);
+
+      if (error) {
+        if (error.code === '42P01') { // Table doesn't exist
+          throw new Error("Reporting system is being initialized. Please try again in a few minutes.");
+        }
+        throw error;
+      }
+
+      alert("Thank you for your report. We will investigate this listing.");
+      setIsReportModalOpen(false);
+      setReportReason('');
+      setReportDetails('');
+    } catch (err) {
+      console.error("Report error:", err);
+      alert(err.message || "Failed to submit report. Please try again.");
+    } finally {
+      setIsReporting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -313,7 +355,7 @@ const PropertyDetails = () => {
             </div>
           ))}
           <button className="show-all-btn" onClick={() => openGallery(0)}>
-            <i className="fa-solid fa-images"></i> Show all photos
+            <Images size={16} style={{ marginRight: '6px' }} /> Show all photos
           </button>
         </div>
 
@@ -514,15 +556,15 @@ const PropertyDetails = () => {
 
           <div className="sidebar">
             <div className="contact-card">
-              <h3>Contact Manager</h3>
+              {/* Manager avatar always visible */}
               <div className="manager-info">
                 <div className={`manager-avatar-wrapper ${loading ? 'skeleton' : ''}`}>
                   {!loading && (
-                    <img 
-                      src={property.manager_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(property.manager_name || 'Admin')}&background=random`} 
-                      alt="Manager" 
-                      className="manager-avatar" 
-                      loading="lazy" 
+                    <img
+                      src={property.manager_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(property.manager_name || 'Admin')}&background=random`}
+                      alt="Manager"
+                      className="manager-avatar"
+                      loading="lazy"
                       onLoad={(e) => e.target.classList.add('loaded')}
                     />
                   )}
@@ -532,24 +574,29 @@ const PropertyDetails = () => {
                     <strong>{property.manager_name || 'Rentor Admin'}</strong>
                   </Link>
                   <p>Verified Partner</p>
-                  {property.phone && (
-                    <a href={`tel:${property.phone}`} className="manager-phone-link">
-                      {property.phone}
-                    </a>
-                  )}
                 </div>
               </div>
-                <div className="contact-actions hide-mobile" style={{marginTop: '1.5rem', width: '100%'}}>
-                  <a 
-                    href={`https://wa.me/${formatWhatsAppNumber(property.phone)}?text=${encodeURIComponent(`Hi, I'm interested in your property: ${property.title} ($${property.price.toLocaleString()}/mo). Is it still available?`)}`} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    className="btn btn-primary" 
-                    style={{width: '100%', borderRadius: 'var(--radius-full)', justifyContent: 'center', backgroundColor: '#593cfb', color: 'white', border: 'none'}}
-                  >
-                    WhatsApp Manager
+
+              {/* Unlocked — show real contact directly */}
+              <div className="contact-unlocked-section hide-mobile">
+                {property.phone && (
+                  <a href={`tel:${property.phone}`} className="manager-phone-link unlocked-phone">
+                    <i className="fa-solid fa-phone" />
+                    {property.phone}
                   </a>
-                </div>
+                )}
+                <a
+                  href={`https://wa.me/${formatWhatsAppNumber(property.phone)}?text=${encodeURIComponent(`Hi, I'm interested in your property: ${property.title} ($${property.price.toLocaleString()}/mo). Is it still available?`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-whatsapp-unlocked"
+                >
+                  <i className="fa-brands fa-whatsapp" /> WhatsApp Manager
+                </a>
+                <button className="btn-report-listing" onClick={() => setIsReportModalOpen(true)}>
+                  <i className="fa-regular fa-flag" /> Report this listing
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -582,6 +629,7 @@ const PropertyDetails = () => {
           </div>
         )}
       </div>      {/* Mobile Sticky CTA Footer */}
+      {/* Mobile Sticky CTA Footer */}
       <div className="mobile-sticky-footer">
         <div className="footer-price-info">
           <div className="price-row">
@@ -592,14 +640,13 @@ const PropertyDetails = () => {
             {getAvailabilityStatus()}
           </div>
         </div>
-        <a 
-          href={`https://wa.me/${formatWhatsAppNumber(property.phone)}?text=${encodeURIComponent(`Hi, I'm interested in your property: ${property.title} ($${property.price.toLocaleString()}/mo). Is it still available?`)}`} 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="btn btn-primary mobile-cta-btn" 
-          style={{backgroundColor: '#593cfb', color: 'white', border: 'none', display: 'flex', alignItems: 'center', gap: '8px'}}
+        <a
+          href={`https://wa.me/${formatWhatsAppNumber(property.phone)}?text=${encodeURIComponent(`Hi, I'm interested in your property: ${property.title} ($${property.price.toLocaleString()}/mo). Is it still available?`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-whatsapp-mobile"
         >
-          <i className="fa-brands fa-whatsapp" style={{ fontSize: '20px' }}></i> WhatsApp
+          <i className="fa-brands fa-whatsapp" /> WhatsApp
         </a>
       </div>
 
@@ -626,6 +673,53 @@ const PropertyDetails = () => {
           </button>
         </div>
       )}
+
+      {/* Report Modal */}
+      {isReportModalOpen && (
+        <div className="report-modal-overlay" onClick={() => setIsReportModalOpen(false)}>
+          <div className="report-modal-content" onClick={e => e.stopPropagation()}>
+            <div className="report-modal-header">
+              <h3>Report this listing</h3>
+              <button className="close-report" onClick={() => setIsReportModalOpen(false)}>
+                <X size={20} />
+              </button>
+            </div>
+            <form onSubmit={handleReportSubmit}>
+              <div className="report-form-group">
+                <label>Why are you reporting this listing?</label>
+                <select 
+                  value={reportReason} 
+                  onChange={e => setReportReason(e.target.value)} 
+                  required
+                >
+                  <option value="">Select a reason</option>
+                  <option value="Inaccurate details">Inaccurate details</option>
+                  <option value="Scam / Fraud">Scam / Fraud</option>
+                  <option value="Sold / Rented out">Sold / Rented out</option>
+                  <option value="Inappropriate content">Inappropriate content</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div className="report-form-group">
+                <label>Additional Details (Optional)</label>
+                <textarea 
+                  value={reportDetails} 
+                  onChange={e => setReportDetails(e.target.value)}
+                  placeholder="Tell us more about the issue..."
+                  rows="3"
+                ></textarea>
+              </div>
+              <div className="report-modal-actions">
+                <button type="button" className="btn btn-outline" onClick={() => setIsReportModalOpen(false)}>Cancel</button>
+                <button type="submit" className="btn btn-primary" disabled={isReporting || !reportReason}>
+                  {isReporting ? 'Submitting...' : 'Submit Report'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };
