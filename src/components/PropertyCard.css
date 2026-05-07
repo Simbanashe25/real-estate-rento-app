@@ -136,9 +136,21 @@
 }
 
 .badge-verified {
-  background-color: transparent;
+  background-color: white;
   padding: 0;
   border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  border: 1px solid white;
+}
+
+.badge-verified i {
+  font-size: 20px !important;
+  line-height: 1;
 }
 
 .favorite-btn {
@@ -356,7 +368,13 @@
   }
 
   .favorite-btn svg, .favorite-btn i {
-    font-size: 18px !important; /* Increased from 14px */
+    font-size: 18px !important; 
+  }
+
+  .badge-verified {
+    padding: 0;
+    width: 20px;
+    height: 20px;
   }
 
   .badge {
